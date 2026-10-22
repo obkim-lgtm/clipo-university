@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="univ_favicon.svg?v=1">
+  <title>CLIPO University — 교수 홈 v1</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-gov.min.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  
+  <style>
+    *{ font-family:'Pretendard GOV',-apple-system,sans-serif; box-sizing:border-box; word-break:keep-all; }
+    body{ margin:0; background:#f6f7f9; color:#222631; font-size:16px; min-width:1280px; }
+    a{ text-decoration:none; color:inherit; }
+    button{ font-family:inherit; }
+    button, .btn{ display:inline-flex; align-items:center; justify-content:center; line-height:1; vertical-align:middle; }
+
+    
+    .sb{ position:fixed; top:0; bottom:0; left:0; width:248px; background:#fff; border-right:1px solid #dde1e8; display:flex; flex-direction:column; z-index:150; transition:width .2s ease; }
+    body.sb-collapsed .sb{ width:68px; }
+    .sb-top{ height:64px; display:flex; align-items:center; gap:8px; padding:0 12px 0 20px; flex-shrink:0; }
+    .sb-logo{ display:inline-flex; align-items:center; gap:8px; cursor:pointer; min-width:0; }
+    .sb-logo-tag{ height:20px; padding:0 6px; border-radius:4px; background:#e9f2ff; color:#3151c4; font-size:12px; font-weight:600; display:inline-flex; align-items:center; line-height:1; letter-spacing:.02em; white-space:nowrap; }
+    .sb-fold{ margin-left:auto; width:36px; height:36px; border:none; background:none; border-radius:6px; color:#6d7381; cursor:pointer; flex-shrink:0; }
+    .sb-fold:hover{ background:#f1f3f5; }
+    body.sb-collapsed .sb-top{ padding:0 16px; justify-content:center; }
+    body.sb-collapsed .sb-logo{ display:none; }
+    body.sb-collapsed .sb-fold{ margin:0; }
+
+    .sb-org{ margin:4px 12px 12px; padding:10px 12px; border-radius:8px; background:#f6f7f9; display:flex; align-items:center; gap:10px; min-width:0; }
+    .sb-org-ico{ width:28px; height:28px; border-radius:6px; background:#fff; border:1px solid #e4e7ec; color:#3b3f4c; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
+    .sb-org-name{ font-size:14px; font-weight:600; color:#222631; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    body.sb-collapsed .sb-org{ padding:10px 0; justify-content:center; background:none; }
+    body.sb-collapsed .sb-org-name{ display:none; }
+
+    .sb-scroll{ flex:1; overflow-y:auto; overflow-x:hidden; padding:0 0 8px; }
+    .si{ height:42px; display:flex; align-items:center; gap:12px; margin:0 12px 2px; padding:0 12px; border-radius:8px; color:#3b3f4c; cursor:pointer; position:relative; white-space:nowrap; font-size:15px; font-weight:500; }
+    .si:hover{ background:#f1f3f5; }
+    .si.active{ background:#e9f2ff; color:#416bff; }
+    .si svg{ width:20px; height:20px; flex-shrink:0; }
+    .si-label{ overflow:hidden; text-overflow:ellipsis; }
+    .si-tip{ position:absolute; left:52px; top:50%; transform:translateY(-50%); background:#222631; color:#fff; font-size:12px; padding:4px 8px; border-radius:4px; white-space:nowrap; display:none; z-index:300; pointer-events:none; }
+    body.sb-collapsed .si{ justify-content:center; padding:0; }
+    body.sb-collapsed .si-label{ display:none; }
+    body.sb-collapsed .si:hover .si-tip{ display:block; }
+
+    .sb-sec{ display:flex; align-items:center; justify-content:space-between; margin:18px 24px 6px; font-size:13px; font-weight:600; color:#6d7381; white-space:nowrap; }
+    body.sb-collapsed .sb-sec{ margin:14px 0 6px; justify-content:center; }
+    body.sb-collapsed .sb-sec span{ display:none; }
+    body.sb-collapsed .sb-sec:before{ content:""; width:28px; height:1px; background:#e4e7ec; }
+    .sc{ height:40px; display:flex; align-items:center; gap:10px; margin:0 12px 2px; padding:0 12px; border-radius:8px; cursor:pointer; position:relative; white-space:nowrap; font-size:14px; color:#3b3f4c; }
+    .sc:hover{ background:#f1f3f5; }
+    .sc.on{ background:#e9f2ff; color:#416bff; }
+    .sc-ini{ width:24px; height:24px; border-radius:6px; background:#e9f2ff; color:#3151c4; font-size:12px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .sc-name{ overflow:hidden; text-overflow:ellipsis; }
+    body.sb-collapsed .sc{ justify-content:center; padding:0; }
+    body.sb-collapsed .sc-name{ display:none; }
+    body.sb-collapsed .sc:hover .si-tip{ display:block; }
+
+    .sb-bottom{ border-top:1px solid #eef0f3; padding:12px 0 14px; flex-shrink:0; }
+    
+    .cr{ margin:0 12px 10px; padding:12px 14px; border-radius:8px; background:#f6f7f9; }
+    .cr-row{ display:flex; align-items:center; gap:8px; font-size:14px; color:#3b3f4c; white-space:nowrap; }
+    .cr-row svg{ width:18px; height:18px; color:#416bff; flex-shrink:0; }
+    .cr-num{ margin-left:auto; font-size:15px; font-weight:600; color:#222631; }
+    .cr-num small{ font-size:13px; font-weight:400; color:#6d7381; }
+    .cr-bar{ height:4px; border-radius:2px; background:#e4e7ec; margin:10px 0 8px; overflow:hidden; }
+    .cr-bar i{ display:block; height:100%; background:#416bff; border-radius:2px; }
+    .cr-note{ font-size:13px; color:#6d7381; margin:0; white-space:nowrap; }
+    body.sb-collapsed .cr{ padding:10px 0; background:none; display:flex; justify-content:center; position:relative; cursor:default; }
+    body.sb-collapsed .cr-row span, body.sb-collapsed .cr-bar, body.sb-collapsed .cr-note{ display:none; }
+    body.sb-collapsed .cr-num{ display:none; }
+    body.sb-collapsed .cr:hover .si-tip{ display:block; }
+    .cr .si-tip{ display:none; }
+
+    .me{ display:flex; align-items:center; gap:10px; margin:6px 12px 0; padding:8px 10px; border-radius:8px; cursor:pointer; position:relative; }
+    .me:hover{ background:#f1f3f5; }
+    .me-av{ width:32px; height:32px; border-radius:50%; background:#e9f2ff; color:#3151c4; font-size:14px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .me-txt{ min-width:0; flex:1; }
+    .me-name{ font-size:14px; font-weight:600; color:#222631; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .me-sub{ font-size:13px; color:#6d7381; white-space:nowrap; }
+    .me-chev{ color:#6d7381; width:16px; height:16px; flex-shrink:0; }
+    body.sb-collapsed .me{ justify-content:center; padding:8px 0; }
+    body.sb-collapsed .me-txt, body.sb-collapsed .me-chev{ display:none; }
+    .me-pop{ position:absolute; left:12px; right:12px; bottom:56px; background:#fff; border-radius:8px; box-shadow:0 0 1px #2226314D,0 8px 24px #00000026; padding:6px; display:none; z-index:400; min-width:208px; }
+    .me-pop.open{ display:block; }
+    body.sb-collapsed .me-pop{ left:60px; right:auto; bottom:0; }
+    .me-pop-lbl{ font-size:13px; color:#6d7381; padding:8px 12px 4px; }
+    .me-pop button{ width:100%; justify-content:flex-start; gap:10px; padding:10px 12px; border:none; background:none; border-radius:6px; font-size:15px; color:#222631; cursor:pointer; }
+    .me-pop button:hover{ background:#f6f7f9; }
+    .me-pop button svg{ width:16px; height:16px; }
+    .me-pop .chk{ margin-left:auto; color:#416bff; }
+    .me-pop-div{ height:1px; background:#f1f3f5; margin:4px 6px; }
+
+    
+    .main{ padding-left:248px; min-height:100vh; display:flex; flex-direction:column; transition:padding-left .2s; }
+    body.sb-collapsed .main{ padding-left:68px; }
+    .page{ max-width:1320px; width:100%; margin:0 auto; padding:36px 40px 0; flex:1; display:flex; flex-direction:column; }
+    .cols{ display:flex; gap:28px; align-items:flex-start; }
+    .col-main{ flex:1; min-width:0; }
+    .col-rail{ width:300px; flex-shrink:0; display:flex; flex-direction:column; gap:20px; }
+
+    
+    .todo{ margin:0 0 36px; }
+    .h2-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:0 0 14px; }
+    .h2{ font-size:22px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px; }
+    .h2 .cnt{ font-size:16px; font-weight:600; color:#416bff; }
+    .more{ background:none; border:none; padding:0; font-size:14px; color:#6d7381; cursor:pointer; gap:2px; }
+    .more:hover{ color:#222631; }
+    .todo-box{ background:#fff; border:1px solid #e6e8ec; border-radius:12px; padding:4px 20px; }
+    .todo-grid{ display:grid; grid-template-columns:1fr; }   
+    .ti{ display:flex; align-items:center; gap:8px; padding:12px 0; min-width:0; border-top:1px solid #f1f3f5; }
+    .ti:first-child{ border-top:none; }
+    .ti .dt{ width:7px; height:7px; border-radius:50%; background:#b8bdc7; flex-shrink:0; }
+    .ti .x{ flex:1; min-width:0; }
+    .ti .x b{ display:block; font-size:16px; font-weight:600; color:#222631; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ti .x small{ display:block; font-size:14px; color:#6d7381; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ti .go{ background:none; border:none; padding:0; font-size:14px; font-weight:600; color:#3151c4; cursor:pointer; gap:1px; white-space:nowrap; flex-shrink:0; }
+    .ti .go:hover{ text-decoration:underline; }
+
+    
+    .tools{ display:flex; align-items:center; gap:14px; }
+    .tgl{ display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none; font-size:15px; color:#3b3f4c; }
+    .tgl-track{ width:40px; height:22px; border-radius:100px; background:#d9d9d9; position:relative; transition:background .15s; flex-shrink:0; }
+    .tgl-knob{ position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#fff; transition:left .15s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+    .tgl.on .tgl-track{ background:#416bff; } .tgl.on .tgl-knob{ left:20px; }
+    .sel{ height:38px; padding:0 36px 0 12px; border:1px solid #d9d9d9; border-radius:6px; font-size:14px; color:#3b3f4c; cursor:pointer; appearance:none; -webkit-appearance:none; background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236d7381' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 12px center; font-family:inherit; }
+    .btn-primary{ height:40px; border-radius:100px; padding:0 18px; background:#416bff; color:#fff; border:none; font-size:15px; font-weight:600; cursor:pointer; gap:6px; }
+    .btn-primary:hover{ background:#365eef; }
+
+    
+    .sem{ margin-bottom:8px; }
+    .sem-hd{ display:flex; align-items:center; gap:12px; padding:14px 0; cursor:pointer; user-select:none; }
+    .sem-title{ font-size:20px; font-weight:700; }
+    .sem-meta{ font-size:14px; color:#6d7381; }
+    .sem-chev{ margin-left:auto; color:#6d7381; transition:transform .15s; }
+    .sem.closed .sem-chev{ transform:rotate(180deg); }
+    .sem.closed .sem-body{ display:none; }
+    .sem-body{ padding-bottom:18px; }
+    .grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+
+    
+    .cc{ background:#fff; border-radius:12px; padding:22px; cursor:pointer; box-shadow:0 0 1px #2226314D,0 2px 8px #0000000F; position:relative; transition:box-shadow .12s; }
+    .cc:hover{ box-shadow:0 0 0 1.5px #ccdfff,0 4px 12px #0000001A; }
+    .cc.arch{ background:#fbfbfc; }
+    .cc-top{ display:flex; align-items:center; gap:12px; }
+    .cc-ico{ width:40px; height:40px; border-radius:10px; background:#e9f2ff; color:#3151c4; font-size:15px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .cc.arch .cc-ico{ background:#f1f3f5; color:#9ea3ad; }
+    .cc-head{ flex:1; min-width:0; }
+    .cc-name{ font-size:17px; font-weight:600; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cc.arch .cc-name{ color:#6d7381; }
+    .cc-meta{ font-size:14px; color:#6d7381; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cc-menu{ width:30px; height:30px; border:none; background:none; border-radius:6px; cursor:pointer; color:#6d7381; flex-shrink:0; }
+    .cc-menu:hover{ background:#f1f3f5; }
+    .ev{ margin-top:26px; }
+    .ev-bar{ display:flex; gap:3px; height:6px; }
+    .ev-bar i{ flex:1; border-radius:3px; background:#e4e7ec; position:relative; }
+    .ev-bar i.done{ background:#416bff; } .ev-bar i.prog{ background:#a3c3ff; }
+    .cc.arch .ev-bar i.done{ background:#c7cbd3; }
+    .ev-names{ display:flex; gap:3px; margin-top:8px; }
+    .ev-names span{ flex:1; min-width:0; font-size:13px; color:#6d7381; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ev-names span.done{ color:#3151c4; }
+    .ev-txt{ font-size:14px; color:#6d7381; margin:12px 0 0; padding-top:12px; border-top:1px solid #f1f3f5; display:flex; align-items:center; gap:6px; }
+    .ev-txt b{ font-weight:600; color:#3b3f4c; }
+
+    
+    .rail{ background:#fff; border-radius:12px; padding:20px; box-shadow:0 0 1px #2226314D,0 2px 8px #0000000F; }
+    .rail-hd{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .rail-title{ font-size:17px; font-weight:700; }
+    .nt{ display:flex; align-items:center; gap:8px; padding:8px 0; font-size:14px; color:#3b3f4c; cursor:pointer; }
+    .nt:hover{ color:#222631; }
+    .nt-txt{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .nt-date{ font-size:14px; color:#9ea3ad; flex-shrink:0; }
+    .new{ display:inline-flex; align-items:center; height:18px; padding:0 5px; border-radius:4px; background:#e9f2ff; color:#3151c4; font-size:11px; font-weight:600; line-height:1; flex-shrink:0; }
+    .res{ display:flex; align-items:flex-start; gap:12px; border-radius:8px; padding:14px 16px; background:#f4f8ff; cursor:pointer; }
+    .res + .res{ margin-top:8px; }
+    .res:hover{ background:#e9f2ff; }
+    .res svg{ width:20px; height:20px; color:#2081ff; flex-shrink:0; margin-top:1px; }
+    .res.gray{ background:#f6f7f9; } .res.gray:hover{ background:#eef0f3; } .res.gray svg{ color:#6d7381; }
+    .res-name{ font-size:16px; font-weight:600; color:#18181b; margin:0 0 4px; }
+    .res-desc{ font-size:14px; color:#3b3f4c; margin:0; line-height:1.5; }
+
+    
+    .view{ display:none; } .view.on{ display:flex; }
+    #v-roster.on{ display:block; }
+    .crumb{ display:flex; align-items:center; gap:4px; font-size:14px; color:#6d7381; margin-bottom:12px; }
+    .crumb a:hover{ color:#222631; text-decoration:underline; }
+    .crumb span{ color:#222631; font-weight:500; }
+    .page-h1{ font-size:26px; font-weight:700; margin:0 0 6px; display:flex; align-items:center; gap:8px; }
+    .page-h1 .cnt{ font-size:18px; color:#416bff; }
+    .page-sub{ font-size:16px; color:#3b3f4c; margin:0 0 24px; }
+    .add-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-bottom:32px; }
+    .add-card{ background:#fff; border-radius:12px; padding:22px; box-shadow:0 0 1px #2226314D,0 2px 8px #0000000F; display:flex; flex-direction:column; }
+    .add-t{ display:flex; align-items:center; gap:8px; font-size:17px; font-weight:700; margin:0 0 4px; }
+    .add-t svg{ width:20px; height:20px; color:#416bff; }
+    .add-d{ font-size:14px; color:#6d7381; margin:0 0 16px; line-height:1.5; }
+    .code-row{ display:flex; align-items:center; gap:10px; }
+    .code{ height:44px; padding:0 18px; border-radius:8px; background:#f4f8ff; border:1px dashed #a3c3ff; color:#3151c4; font-size:20px; font-weight:700; letter-spacing:.18em; display:inline-flex; align-items:center; }
+    .inp{ height:44px; border:1px solid #d9d9d9; border-radius:8px; padding:0 14px; font-size:16px; color:#222631; font-family:inherit; outline:none; background:#fff; width:220px; }
+    .inp:focus{ border-color:#416bff; box-shadow:0 0 0 3px #e9f2ff; }
+    .btn-sec{ height:44px; padding:0 16px; border-radius:8px; border:1px solid #d9d9d9; background:#fff; color:#3b3f4c; font-size:15px; font-weight:500; cursor:pointer; gap:6px; }
+    .btn-sec:hover{ background:#f6f7f9; }
+    .btn-solid{ height:44px; padding:0 20px; border-radius:8px; border:none; background:#416bff; color:#fff; font-size:15px; font-weight:600; cursor:pointer; gap:6px; }
+    .btn-solid:hover{ background:#365eef; }
+    .btn-solid:disabled{ background:#c7cbd3; cursor:not-allowed; }
+    .btn-solid.sm{ height:36px; padding:0 14px; font-size:14px; }
+    .txt-link{ align-self:flex-start; margin-top:auto; padding-top:16px; background:none; border:none; font-size:14px; color:#6d7381; text-decoration:underline; cursor:pointer; }
+    .txt-link:hover{ color:#222631; }
+    .sid-res{ margin-top:12px; display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:8px; background:#f6f7f9; font-size:15px; }
+    .sid-res b{ font-weight:600; }
+    .sid-res .dim{ color:#6d7381; font-size:14px; }
+    .sid-res .r{ margin-left:auto; font-size:14px; color:#6d7381; }
+    .sid-res.none{ background:none; padding:10px 0 0; color:#f2525f; font-size:14px; }
+    .tbl-hd{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .tbl-t{ font-size:20px; font-weight:700; }
+    .tbl-filter{ display:flex; align-items:center; gap:8px; height:38px; padding:0 12px; border:1px solid #d9d9d9; border-radius:6px; background:#fff; color:#6d7381; }
+    .tbl-filter input{ border:none; outline:none; font-size:14px; font-family:inherit; width:200px; color:#222631; }
+    .tbl-wrap{ background:#fff; border-radius:12px; box-shadow:0 0 1px #2226314D,0 2px 8px #0000000F; overflow:hidden; }
+    .tbl{ width:100%; border-collapse:collapse; }
+    .tbl th{ background:#f6f7f9; font-size:14px; font-weight:600; color:#6d7381; padding:12px 16px; text-align:center; border-bottom:1px solid #eceef1; }
+    .tbl td{ font-size:15px; padding:13px 16px; text-align:center; border-bottom:1px solid #f1f3f5; }
+    .tbl tr:last-child td{ border-bottom:none; }
+    .tbl tr.fresh td{ background:#f4f8ff; }
+    .tbl .muted{ color:#9ea3ad; }
+    .tag{ display:inline-flex; align-items:center; height:24px; padding:0 8px; border-radius:6px; font-size:13px; font-weight:500; background:#f1f3f5; color:#3b3f4c; }
+    .row-x{ background:none; border:none; font-size:14px; color:#6d7381; cursor:pointer; text-decoration:underline; }
+    .ev-txt .r{ margin-left:auto; background:none; border:none; padding:0; font-size:14px; font-weight:600; color:#3151c4; cursor:pointer; gap:1px; }
+    .ev-txt .r:hover{ text-decoration:underline; }
+
+    
+    .toast{ position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(12px); opacity:0; min-width:320px; max-width:560px; padding:14px 22px 14px 16px; border-radius:4px; display:flex; align-items:center; gap:12px; font-size:15px; font-weight:600; box-shadow:0 0 1px #2226314D,0 4px 12px #00000026; z-index:9999; transition:opacity .2s,transform .2s; pointer-events:none; background:#416bff; color:#fff; }
+    .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+    .footer{ margin-top:auto; padding:48px 0 40px; display:flex; flex-direction:column; align-items:center; gap:14px; }
+    .footer-links{ display:flex; align-items:center; }
+    .footer-links a{ font-size:14px; color:#3b3f4c; padding:0 16px; }
+    .footer-links a + a{ border-left:1px solid #dde1e8; }
+    .footer-copy{ font-size:14px; color:#9aa0ad; }
+  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap">   
+  <link rel="stylesheet" href="univ_detail.css?v=22">   
+  <link rel="stylesheet" href="univ_theme.css?v=5">   
+</head>
+<body>
+
+
+<aside class="sb">
+  <div class="sb-top">
+    <a class="sb-logo" href="#" title="홈으로">
+      <svg width="76" height="16" viewBox="0 0 76 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.3613 4.03516H4.09668V11.9629H8.88281L8.88086 11.9648H15.6016V16H4.02539C1.80242 15.9998 0 14.223 0 12.0322V3.96777C0 1.77696 1.80242 0.000177874 4.02539 0H15.4561L11.3613 4.03516ZM22.0703 11.9648H33.5781V16H22.002C19.7788 16 17.9756 14.2231 17.9756 12.0322V0H22.0703V11.9648ZM40.0459 16H35.9521V0H40.0459V16ZM54.5381 0C56.4564 0 58.0138 1.53228 58.0186 3.42285L58.0166 3.4248V8.54297C58.014 10.4333 56.4567 11.9648 54.5361 11.9648H46.5107L42.416 16V0H54.5381ZM71.9746 0C74.0086 0.000134956 75.6887 1.49046 75.958 3.42285H76V12.5771H75.958C75.6887 14.5095 74.011 15.9999 71.9746 16H64.4238C62.3897 16 60.7098 14.5096 60.4404 12.5771C60.4145 12.398 60.3984 12.2184 60.3984 12.0322V3.96777C60.3984 3.78159 60.4145 3.60205 60.4404 3.42285C60.7098 1.49037 62.3873 0 64.4238 0H71.9746ZM64.4922 12.5771H71.9062V3.42285H64.4922V12.5771ZM46.5107 3.42285V8.54004H53.9238V3.42285H46.5107Z" fill="#365EEF"/></svg>
+      <span class="sb-logo-tag">University</span>
+    </a>
+    <button class="sb-fold" onclick="toggleSb()" id="sbFold" title="메뉴 접기"><i data-lucide="panel-left-close" style="width:20px;height:20px"></i></button>
+  </div>
+
+  <div class="sb-org" title="DD대학교 사범대학">
+    <span class="sb-org-ico"><i data-lucide="landmark" style="width:16px;height:16px"></i></span>
+    <span class="sb-org-name" data-t="org"></span>
+  </div>
+
+  <div class="sb-scroll">
+    <nav id="nav"></nav>
+    <div class="sb-sec"><span data-t="secCourses"></span></div>
+    <div id="sbCourses"></div>
+  </div>
+
+  <div class="sb-bottom">
+    <div class="cr">
+      <div class="cr-row"><i data-lucide="bot"></i><span data-t="creditLbl"></span><span class="cr-num">72<small> / 100</small></span></div>
+      <div class="cr-bar"><i style="width:72%"></i></div>
+      <p class="cr-note" data-t="creditNote"></p>
+      <span class="si-tip" data-t="creditTip"></span>
+    </div>
+    <div id="navBottom"></div>
+    <div class="me" onclick="togglePop(event)">
+      <span class="me-av" data-t="avatar"></span>
+      <div class="me-txt"><div class="me-name" data-t="meName"></div><div class="me-sub" data-t="meSub"></div></div>
+      <i data-lucide="chevrons-up-down" class="me-chev"></i>
+      <div class="me-pop" id="mePop" onclick="event.stopPropagation()">
+        <div class="me-pop-lbl" data-t="langLbl"></div>
+        <button onclick="setLang('ko')"><i data-lucide="globe"></i>한국어<i data-lucide="check" class="chk" id="chk-ko"></i></button>
+        <button onclick="setLang('en')"><i data-lucide="globe"></i>English<i data-lucide="check" class="chk" id="chk-en"></i></button>
+        <div class="me-pop-div"></div>
+        <button onclick="notReady()"><i data-lucide="user-round"></i><span data-t="myInfo"></span></button>
+        <button onclick="location.href='univ_student_v1_261019.html#login'"><i data-lucide="log-out"></i><span data-t="logout"></span></button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+
+<main class="main">
+  <div class="page">
+    <div class="view on" id="v-home" style="flex-direction:column">
+    <div class="u-top"><div><h1 data-t="greetH"></h1><p data-t="greetP"></p></div><span class="u-term" data-t="termNow"></span></div>
+    <div class="cols">
+      <div class="col-main">
+
+        <section class="todo">
+          <div class="h2-row">
+            <h2 class="h2"><span data-t="todo"></span><span class="cnt" id="todoCnt"></span></h2>
+            <button class="more" id="todoMore" onclick="toggleTodo()"></button>
+          </div>
+          <div class="todo-box"><div class="todo-grid" id="todoGrid"></div></div>
+        </section>
+
+        <div class="h2-row">
+          <h2 class="h2" data-t="myCourses"></h2>
+          <div class="tools">
+            <label class="tgl" id="archTgl" onclick="this.classList.toggle('on'); render()"><span class="tgl-track"><span class="tgl-knob"></span></span><span data-t="showArch"></span></label>
+            <button class="btn-primary" onclick="notReady()"><i data-lucide="plus" style="width:18px;height:18px"></i><span data-t="newCourse"></span></button>
+          </div>
+        </div>
+        <div id="sems"></div>
+      </div>
+
+      <aside class="col-rail">
+        <div class="h2-row"><h2 class="h2" id="weekH">이번 주</h2></div>   
+        <div class="rail wk-box" id="weekBox"></div>
+        <div class="rail">
+          <div class="rail-hd"><span class="rail-title" data-t="notice"></span><button class="more" onclick="notReady()"><span data-t="all"></span><i data-lucide="chevron-right" style="width:16px;height:16px"></i></button></div>
+          <div id="notices"></div>
+        </div>
+      </aside>
+    </div>
+    </div>
+
+    <div class="view" id="v-detail"></div>   
+
+    
+    <div class="view" id="v-roster">
+      <div id="rHead"></div>   
+      <p class="page-sub" data-t="rosterSub"></p>
+
+      <div class="add-grid">
+        <div class="add-card">
+          <p class="add-t"><i data-lucide="ticket"></i><span data-t="codeT"></span></p>
+          <p class="add-d" data-t="codeD"></p>
+          <div class="code-row"><span class="code" id="rCode"></span><button class="btn-sec" onclick="copyCode()"><i data-lucide="copy" style="width:16px;height:16px"></i><span data-t="copy"></span></button></div>
+          <button class="txt-link" onclick="notReady()" data-t="codeNew"></button>
+        </div>
+        <div class="add-card">
+          <p class="add-t"><i data-lucide="user-plus"></i><span data-t="addT"></span></p>
+          <p class="add-d" data-t="addD"></p>
+          <div class="code-row">
+            <input class="inp" id="sidInp" inputmode="numeric" maxlength="10" oninput="sidChange()" onkeydown="if(event.key==='Enter')findSid()">
+            <button class="btn-solid" id="sidGo" disabled onclick="findSid()" data-t="find"></button>
+          </div>
+          <div id="sidRes"></div>
+          <button class="txt-link" onclick="notReady()" data-t="excel"></button>
+        </div>
+      </div>
+
+      <div class="tbl-hd">
+        <span class="tbl-t" data-t="listT"></span>
+        <div class="tbl-filter"><i data-lucide="search" style="width:16px;height:16px"></i><input id="rFilter" oninput="renderRoster()"></div>
+      </div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th data-t="thSid"></th><th data-t="thName"></th><th data-t="thDept"></th><th data-t="thHow"></th><th data-t="thLogin"></th><th></th></tr></thead><tbody id="rBody"></tbody></table></div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-links"><a href="#" onclick="notReady();return false" data-t="terms"></a><a href="#" onclick="notReady();return false" data-t="privacy"></a><a href="#" onclick="notReady();return false" data-t="help"></a></div>
+      <div class="footer-copy">© DataDriven Inc.</div>
+    </footer>
+  </div>
+</main>
+
+<div class="toast" id="toast"><i data-lucide="info" style="width:18px;height:18px"></i><span id="toastMsg"></span></div>
+
+<script>
+
+const T = {
+  ko:{
+    org:'DD대학교 사범대학', secCourses:'이번 학기 강좌',
+    greetH:'안녕하세요, 이정민 교수님', greetP:'확인할 평가 2개, 공개할 평가 1개, AI 채점할 평가 1개가 있어요.', termNow:'2026년 2학기',
+    creditLbl:'오늘 크레딧', creditNote:'매일 0시에 100으로 채워져요', creditTip:'오늘 크레딧 72 / 100',
+    avatar:'이', meName:'이정민 교수', meSub:'교육학과',
+    langLbl:'언어', myInfo:'내 정보', logout:'로그아웃',
+    todo:'내 할 일', myCourses:'내 강좌', showArch:'보관한 강좌 보기', newCourse:'강좌 만들기',
+    sortRecent:'최근 연 순', sortName:'이름 순',
+    notice:'공지', all:'전체', guides:'처음 쓸 때 보는 자료',
+    terms:'이용약관', privacy:'개인정보처리방침', help:'고객센터',
+    more:n=>`더보기 ${n}`, fold:'접기', students:n=>`수강생 ${n}명`,
+    evalSummary:(d,t)=>`평가 ${t}개 중 <b>${d}개</b> 공개 완료`, evCount:n=>`평가 ${n}개`, ccRev:n=>`확인할 평가 ${n}`, ccRel:n=>`공개할 평가 ${n}`, ccAi:n=>`AI 채점할 평가 ${n}`, ccNone:'지금 할 일 없음',
+    notReady:'시안에서는 아직 열리지 않아요',
+    nav:{home:'홈', courses:'강좌', reports:'리포트', guide:'사용 안내', support:'고객센터'},
+    rosterEmpty:'아직 수강생이 없어요. 위의 강좌 코드를 첫 수업에 알려 주거나 학번으로 추가해 주세요.', rosterLink:'수강생', rosterH:'수강생', rosterSub:'학생에게 강좌 코드를 알려 주면 직접 참여하고, 학번을 알면 바로 추가할 수 있어요.',
+    codeT:'강좌 코드로 참여', codeD:'첫 수업에 이 코드를 알려 주세요. 학생이 로그인한 뒤 코드를 넣으면 이 강좌에 들어와요.', copy:'복사', copied:'강좌 코드를 복사했어요', codeNew:'코드 새로 만들기',
+    addT:'학번으로 추가', addD:'학번 전체를 넣어 주세요. 이름으로는 찾을 수 없어요. 추가된 학생은 학교 이메일로 로그인해요.', find:'찾기', add:'추가',
+    excel:'엑셀로 한 번에 추가', sidNone:'이 학번의 학생이 없어요. 학번을 다시 확인해 주세요.', sidIn:'이미 수강생이에요', added:n=>`${n} 학생을 추가했어요`,
+    listT:'수강생 목록', filterPh:'학번이나 이름으로 찾기', thSid:'학번', thName:'이름', thDept:'학과', thHow:'참여 방법', thLogin:'첫 로그인',
+    howCode:'강좌 코드', howProf:'교수가 추가', howExcel:'엑셀 등록', loginDone:'완료', loginYet:'아직', remove:'제외', removeAsk:n=>`${n} 학생을 이 강좌에서 제외할까요? 제출한 답안은 남아 있어요.`, moreRows:n=>`${n}명 더 보기`, removed:n=>`${n} 학생을 제외했어요`,
+    sems:{s2:'2026년 2학기', s1:'2026년 1학기'}, semCnt:n=>`강좌 ${n}개`,
+  },
+  en:{
+    org:'DD University College of Education', secCourses:'This term',
+    greetH:'Hello, Prof. Lee', greetP:'2 assessments to review, 1 to release and 1 to AI-score.', termNow:'Fall 2026',
+    creditLbl:'Credits today', creditNote:'Refills to 100 daily at 00:00', creditTip:'Credits today 72 / 100',
+    avatar:'L', meName:'Prof. Jeongmin Lee', meSub:'Dept. of Education',
+    langLbl:'Language', myInfo:'My profile', logout:'Sign out',
+    todo:'To do', myCourses:'My courses', showArch:'Show archived', newCourse:'New course',
+    sortRecent:'Recently opened', sortName:'Name',
+    notice:'Announcements', all:'All', guides:'Getting started',
+    terms:'Terms', privacy:'Privacy', help:'Help center',
+    more:n=>`${n} more`, fold:'Show less', students:n=>`${n} students`,
+    evalSummary:(d,t)=>`<b>${d}</b> of ${t} assessments released`, evCount:n=>`${n} assessments`, ccRev:n=>`${n} to review`, ccRel:n=>`${n} to release`, ccAi:n=>`${n} to AI-score`, ccNone:'nothing to do now',
+    notReady:'Not available in this mockup yet',
+    nav:{home:'Home', courses:'Courses', reports:'Reports', guide:'User guide', support:'Help center'},
+    rosterEmpty:'No students yet. Share the course code above in class, or add students by ID.', rosterLink:'Students', rosterH:'Students', rosterSub:'Share the course code so students can join, or add them directly by student ID.',
+    codeT:'Join with course code', codeD:'Share this code in your first class. Students enter it after signing in to join this course.', copy:'Copy', copied:'Course code copied', codeNew:'Generate a new code',
+    addT:'Add by student ID', addD:'Enter the full student ID. Names cannot be searched. Once added, the student signs in with their school email.', find:'Find', add:'Add',
+    excel:'Add many with Excel', sidNone:'No student with this ID. Please check it again.', sidIn:'Already enrolled', added:n=>`Added ${n}`,
+    listT:'Class roster', filterPh:'Search by ID or name', thSid:'Student ID', thName:'Name', thDept:'Department', thHow:'Joined via', thLogin:'First sign-in',
+    howCode:'Course code', howProf:'Added by you', howExcel:'Excel upload', loginDone:'Consented', loginYet:'Not yet', remove:'Remove', removeAsk:n=>`Remove ${n} from this course? Their submissions are kept.`, moreRows:n=>`Show ${n} more`, removed:n=>`Removed ${n}`,
+    sems:{s2:'Fall 2026', s1:'Spring 2026'}, semCnt:n=>`${n} courses`,
+  }
+};
+let lang = 'ko';
+const t = k => T[lang][k];
+
+
+const NAV = [
+  {k:'home', ic:'home', active:true},
+  {k:'courses', ic:'library-big'},
+  {k:'reports', ic:'bar-chart-2'},
+];
+const NAV_BOTTOM = [
+  {k:'guide', ic:'book-open'},
+  {k:'support', ic:'help-circle'},
+];
+
+
+const COURSES = [
+  {id:'c1', sem:'s2', ko:'교육평가', en:'Educational Assessment', secKo:'01분반', secEn:'Sec. 01', n:42, ev:[['과제 0','Essay 0','prog'],['과제 1','Essay 1','done'],['쪽지시험 1','Quiz 1','prog'],['쪽지시험 2','Quiz 2','prog'],['중간고사','Midterm','prog'],['과제 2','Essay 2','prog'],['과제 3','Essay 3','prog'],['과제 4','Essay 4','none'],['기말고사','Final','none']]},
+  {id:'c2', sem:'s2', ko:'사회교육 논리 및 논술', en:'Logic & Writing in Social Studies Ed.', secKo:'01분반', secEn:'Sec. 01', n:27, ev:[['과제 1','Essay 1','done'],['과제 2','Essay 2','prog'],['중간고사','Midterm','done'],['기말고사','Final','none']]},
+  {id:'c3', sem:'s2', ko:'국어교육론', en:'Korean Language Education', secKo:'02분반', secEn:'Sec. 02', n:38, ev:[['과제 1','Essay 1','done'],['과제 2','Essay 2','prog'],['기말고사','Final','none']]},
+  {id:'c4', sem:'s2', ko:'일반사회교육론', en:'Social Studies Education Theory', secKo:'대학원', secEn:'Graduate', n:12, ev:[['과제 1','Paper 1','prog'],['기말 보고서','Final paper','none']]},
+  {id:'c5', sem:'s1', ko:'교육과정 및 교육평가', en:'Curriculum & Assessment', secKo:'03분반', secEn:'Sec. 03', n:45, ev:[['과제 1','Essay 1','done'],['중간고사','Midterm','done'],['기말고사','Final','done']]},
+  {id:'c6', sem:'s1', ko:'교과 논리 및 논술', en:'Subject Logic & Writing', secKo:'01분반', secEn:'Sec. 01', n:31, ev:[['과제 1','Essay 1','done'],['기말고사','Final','done']]},
+  {id:'c7', sem:'s1', ko:'교육학 특강', en:'Special Topics in Education', secKo:'01분반', secEn:'Sec. 01', n:18, ev:[['기말 보고서','Final paper','done']], arch:true},
+];
+
+
+const TODO = [
+  {c:'c1', e:5, ko:['중간고사','확인 전','12명 남음'], en:['Midterm','Unreviewed','12 left'], goKo:'확인하기', goEn:'Review'},
+  {c:'c2', e:2, ko:['과제 2','확인 전','11명 남음'], en:['Essay 2','Unreviewed','11 left'], goKo:'확인하기', goEn:'Review'},
+  {c:'c3', e:2, ko:['과제 2','제출 마감 10월 21일','제출 18/38명'], en:['Essay 2','Due Oct 21','18/38 submitted'], goKo:'제출 현황', goEn:'Submissions'},
+  {c:'c1', e:7, ko:['과제 3 · 평가 문항 분석','공개 전','39명 확인함'], en:['Essay 3 · Item analysis','Not released','39 reviewed'], goKo:'공개하기', goEn:'Release'},
+  {c:'c1', e:4, ko:['쪽지시험 2','AI 채점 전','42명'], en:['Quiz 2','Not scored','42 students'], goKo:'AI 채점', goEn:'AI scoring'},
+];
+
+const IS_TA = new URLSearchParams(location.search).get('role')==='ta';
+if (IS_TA){
+  COURSES.splice(0, COURSES.length, ...COURSES.filter(c=>c.id==='c1'));
+  const relOk = new URLSearchParams(location.search).get('rel')==='1';
+  TODO.splice(0, TODO.length, ...TODO.filter(x=>x.c==='c1' && (relOk || x.goKo!=='공개하기')));
+  document.documentElement.classList.add('ta');
+  Object.assign(T.ko, {meName:'정다은 조교', meSub:'교육평가 조교', avatar:'정', greetH:'안녕하세요, 정다은 조교', greetP:'맡은 강좌 1개 · 확인할 평가와 AI 채점할 평가가 있어요.'});
+  Object.assign(T.en, {meName:'Daeun Jung (TA)', meSub:'TA · Educational Assessment', avatar:'D', greetH:'Hello, Daeun', greetP:'1 course as TA · assessments to review and AI-score.'});
+}
+
+const NOTICES = [
+  {ko:'손글씨 답안 스캔 업로드가 열렸어요', en:'Handwritten answer scans are now supported', d:'10.16', isNew:true},
+  {ko:'11월 2일(일) 02:00~04:00 점검 안내', en:'Maintenance: Nov 2, 02:00–04:00 KST', d:'10.14'},
+  {ko:'2학기 수강생 명단 올리는 방법', en:'How to upload your Fall roster', d:'09.01'},
+];
+const GUIDES = [
+  {ic:'book-open', ko:['교수용 사용 안내','강좌 만들기부터 피드백 공개까지 한 번에 봐요.'], en:['Instructor guide','From creating a course to releasing feedback.']},
+  {ic:'id-card', ko:['학생 로그인 안내문','학번으로 로그인하고 개인정보 이용에 동의하는 법이에요. 첫 수업에 나눠 주세요.'], en:['Student sign-in handout','How students sign in with their ID and give consent. Share it in your first class.']},
+  {ic:'scan-line', ko:['손글씨 답안 스캔 요령','시험 답안을 PDF로 스캔할 때 인식이 잘 되는 설정이에요.'], en:['Scanning handwritten answers','Scanner settings that help recognition.']},
+];
+
+
+const CODES = {c1:'7K2Q9X', c2:'M4TR8B', c3:'Q9WN2D', c4:'H3XP6L', c5:'B7KD4Z', c6:'R2MV8C', c7:'N5JH3T'};
+const ROSTER_BASE = [
+  ['202312001','강하늘','Haneul Kang','교육학과','Education','code',1],
+  ['202312014','김도윤','Doyun Kim','교육학과','Education','code',1],
+  ['202211408','박서준','Seojun Park','국어교육과','Korean Ed.','excel',1],
+  ['202311552','윤지아','Jia Yoon','일반사회교육과','Social Studies Ed.','code',1],
+  ['202412087','이하은','Haeun Lee','교육학과','Education','prof',0],
+  ['202110934','장민재','Minjae Jang','수학교육과','Math Ed.','excel',1],
+  ['202312231','최예린','Yerin Choi','영어교육과','English Ed.','code',1],
+  ['202413305','한지후','Jihu Han','교육학과','Education','prof',0],
+];
+
+(function(){ const ln=['강','김','남','류','문','박','서','송','안','양','오','유','이','임','장','전','정','조','차','최','하','한','허','홍'], fn=['민서','지호','서준','하린','도윤','수아','예준','지우','시우','유나','준서','채원','건우','다은','현우','서아','태윤','지안'], fe=['Minseo','Jiho','Seojun','Harin','Doyun','Sua','Yejun','Jiwoo','Siwoo','Yuna','Junseo','Chaewon','Gunwoo','Daeun','Hyunwoo','Seoa','Taeyun','Jian'], le=['Kang','Kim','Nam','Ryu','Moon','Park','Seo','Song','Ahn','Yang','Oh','Yoo','Lee','Lim','Jang','Jeon','Jung','Cho','Cha','Choi','Ha','Han','Heo','Hong'], dk=['교육학과','국어교육과','일반사회교육과','영어교육과','수학교육과','역사교육과'], de=['Education','Korean Ed.','Social Studies Ed.','English Ed.','Math Ed.','History Ed.'], how=['code','code','excel','code','prof'];
+  ROSTER_BASE.push(['202312345','김서연','Seoyeon Kim','국어교육과','Korean Ed.','code',1]);   
+  for (let k=0;k<33;k++){ const a=(k*7)%24, b=(k*5+3)%18, x=k%6; ROSTER_BASE.push([String(202310100+k*37), ln[a]+fn[b], fe[b]+' '+le[a], dk[x], de[x], how[k%5], k%9===4?0:1]); } })();
+const rosters = {};
+const rosterOf = id => (rosters[id] = rosters[id] || ROSTER_BASE.slice(0, (cById(id)||{n:ROSTER_BASE.length}).n).map(r=>({sid:r[0], ko:r[1], en:r[2], dko:r[3], den:r[4], how:r[5], login:r[6]})));
+
+const STUDENT_DB = [
+  {sid:'202312345', ko:'김서연', en:'Seoyeon Kim', dko:'국어교육과', den:'Korean Ed.'},
+  {sid:'202211876', ko:'정민호', en:'Minho Jung', dko:'일반사회교육과', den:'Social Studies Ed.'},
+  {sid:'202415520', ko:'한유진', en:'Yujin Han', dko:'교육학과', den:'Education'},
+  ...ROSTER_BASE.map(r=>({sid:r[0], ko:r[1], en:r[2], dko:r[3], den:r[4]})),
+];
+let view = 'home', rosterId = 'c1', freshSid = null, showN = 10;   
+
+function go(v, id){
+  view = v; if (id) rosterId = id;
+  freshSid = null; document.getElementById('sidInp').value = ''; document.getElementById('sidRes').innerHTML = ''; document.getElementById('sidGo').disabled = true;
+  location.hash = v==='roster' ? 'roster-'+rosterId : '';
+  render(); window.scrollTo(0,0);
+}
+function renderRoster(){
+  const c = cById(rosterId), list = rosterOf(rosterId);
+  document.getElementById('rCode').textContent = CODES[rosterId];
+  const f = document.getElementById('rFilter');
+  f.placeholder = t('filterPh');
+  const q = f.value.trim().toLowerCase();
+  const rows = list.filter(r=>!q || r.sid.includes(q) || r.ko.includes(q) || r.en.toLowerCase().includes(q));
+  const how = {code:t('howCode'), prof:t('howProf'), excel:t('howExcel')};
+  const vis = q ? rows : rows.slice(0, showN);
+  document.getElementById('rBody').innerHTML = !list.length ? `<tr><td colspan="6" style="padding:32px;color:#6d7381">${t('rosterEmpty')}</td></tr>` : vis.map(r=>`<tr class="${r.sid===freshSid?'fresh':''}"><td>${r.sid}</td><td>${lang==='ko'?r.ko:r.en}</td><td>${lang==='ko'?r.dko:r.den}</td><td><span class="tag">${how[r.how]}</span></td><td class="${r.login?'':'muted'}">${r.login?t('loginDone'):t('loginYet')}</td><td><button class="row-x" onclick="removeSid('${r.sid}')">${t('remove')}</button></td></tr>`).join('')
+    + (!q && rows.length > showN ? `<tr><td colspan="6"><button class="row-x" onclick="showN+=10; renderRoster()">${t('moreRows')(Math.min(10, rows.length-showN))}</button></td></tr>` : '');
+}
+function sidChange(){
+  const v = document.getElementById('sidInp').value.replace(/\D/g,'');
+  document.getElementById('sidInp').value = v;
+  document.getElementById('sidGo').disabled = v.length < 9;
+  document.getElementById('sidRes').innerHTML = '';
+}
+function findSid(){
+  const v = document.getElementById('sidInp').value.trim(), box = document.getElementById('sidRes');
+  const st = STUDENT_DB.find(s=>s.sid===v);
+  if (!st){ box.innerHTML = `<div class="sid-res none">${t('sidNone')}</div>`; return; }
+  const inList = rosterOf(rosterId).some(r=>r.sid===v);
+  const nm = lang==='ko'?st.ko:st.en, dp = lang==='ko'?st.dko:st.den;
+  box.innerHTML = `<div class="sid-res"><b>${nm}</b><span class="dim">${st.sid} · ${dp}</span>${inList ? `<span class="r">${t('sidIn')}</span>` : `<button class="btn-solid sm" style="margin-left:auto" onclick="addSid('${st.sid}')">${t('add')}</button>`}</div>`;
+}
+function addSid(sid){
+  const st = STUDENT_DB.find(s=>s.sid===sid);
+  rosterOf(rosterId).unshift({...st, how:'prof', login:0});
+  freshSid = sid;
+  document.getElementById('sidInp').value = ''; document.getElementById('sidRes').innerHTML = ''; document.getElementById('sidGo').disabled = true;
+  renderRoster(); toast(t('added')(lang==='ko'?st.ko:st.en));
+}
+function removeSid(sid){
+  const l = rosterOf(rosterId), i = l.findIndex(r=>r.sid===sid), r = l[i];
+  if (!confirm(t('removeAsk')(lang==='ko'?r.ko:r.en))) return;   
+  l.splice(i,1); renderRoster(); toast(t('removed')(lang==='ko'?r.ko:r.en));
+}
+function copyCode(){ try{ navigator.clipboard.writeText(CODES[rosterId]); }catch(e){} toast(t('copied')); }
+
+let todoOpen = false;
+const L = o => lang==='ko' ? o.ko : o.en;
+const cById = id => COURSES.find(c=>c.id===id);
+const cName = c => lang==='ko' ? c.ko : c.en;
+const ini = c => lang==='ko' ? c.ko[0] : c.en[0];
+
+function render(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(el=>{ const v = t(el.dataset.t); if (typeof v === 'string') el.textContent = v; });
+  document.getElementById('v-home').classList.toggle('on', view==='home');
+  document.getElementById('v-roster').classList.toggle('on', view==='roster');
+  NAV[0].active = view==='home';
+  if (view==='roster') renderRoster();
+
+  
+  const navItem = (n)=>`<div class="si${n.active?' active':''}" onclick="${n.k==='home'?"go('home')":'notReady()'}"><i data-lucide="${n.ic}"></i><span class="si-label">${T[lang].nav[n.k]}</span><span class="si-tip">${T[lang].nav[n.k]}</span></div>`;
+  document.getElementById('nav').innerHTML = NAV.map(navItem).join('');
+  document.getElementById('navBottom').innerHTML = NAV_BOTTOM.map(navItem).join('');
+  document.getElementById('sbCourses').innerHTML = COURSES.filter(c=>c.sem==='s2' && !c.arch).map(c=>
+    `<div class="sc${view==='roster'&&rosterId===c.id?' on':''}" onclick="go('roster','${c.id}')" title="${cName(c)}"><span class="sc-ini">${ini(c)}</span><span class="sc-name">${cName(c)}</span><span class="si-tip">${cName(c)}</span></div>`).join('');
+
+  
+  const list = todoOpen ? TODO : TODO.slice(0,4);
+  document.getElementById('todoCnt').textContent = TODO.length;
+  document.getElementById('todoGrid').innerHTML = list.map(x=>{
+    const c = cById(x.c), [ev, st, fact] = L(x);
+    const sec = lang==='ko' ? c.secKo : c.secEn;
+    return `<div class="ti"><span class="dt"></span><div class="x"><b>${cName(c)} · ${sec}</b><small>${ev} · ${st} · ${fact}</small></div><button class="go" onclick="go('eval','${x.c}',${x.e})">${lang==='ko'?x.goKo:x.goEn}<i data-lucide="chevron-right" style="width:16px;height:16px"></i></button></div>`;
+  }).join('');
+  const more = document.getElementById('todoMore');
+  more.style.display = TODO.length>4 ? '' : 'none';
+  more.innerHTML = todoOpen ? `${t('fold')}<i data-lucide="chevron-up" style="width:16px;height:16px"></i>` : `${t('more')(TODO.length-4)}<i data-lucide="chevron-right" style="width:16px;height:16px"></i>`;
+
+  
+  const sv = 'recent';
+
+  
+  const showArch = document.getElementById('archTgl').classList.contains('on');
+  const semHtml = ['s2','s1'].map((s,i)=>{
+    let cs = COURSES.filter(c=>c.sem===s && (showArch || !c.arch));
+    if (sv==='name') cs = [...cs].sort((a,b)=>cName(a).localeCompare(cName(b), lang));
+    const open = (window._semOpen||{s2:true})[s];
+    return `<section class="sem${open?'':' closed'}" data-s="${s}">
+      <div class="sem-hd" onclick="toggleSem('${s}')"><span class="sem-title">${T[lang].sems[s]}</span><span class="sem-meta">${t('semCnt')(cs.length)}</span><i data-lucide="chevron-up" class="sem-chev"></i></div>
+      <div class="sem-body"><div class="grid">${cs.map(card).join('')}</div></div>
+    </section>`;
+  }).join('');
+  document.getElementById('sems').innerHTML = semHtml;
+
+  
+  document.getElementById('notices').innerHTML = NOTICES.map(n=>`<div class="nt" onclick="notReady()">${n.isNew?'<span class="new">NEW</span>':''}<span class="nt-txt">${L(n)}</span><span class="nt-date">${n.d}</span></div>`).join('');
+
+  document.getElementById('chk-ko').style.visibility = lang==='ko'?'visible':'hidden';
+  document.getElementById('chk-en').style.visibility = lang==='en'?'visible':'hidden';
+  document.getElementById('sbFold').title = lang==='ko' ? '메뉴 접기' : 'Collapse menu';
+  lucide.createIcons();
+}
+
+
+function cardTodo(c){
+  if (typeof evOf !== 'function') return `<span>${t('evCount')(c.ev.length)}</span>`;
+  const evs = evOf(c.id), k = {rev:0, rel:0, ai:0}; evs.forEach(e=>{ const a = nextAct(e); if (k[a]!==undefined) k[a]++; });
+  const parts = [k.rev && t('ccRev')(k.rev), k.rel && t('ccRel')(k.rel), k.ai && t('ccAi')(k.ai)].filter(Boolean);
+  return parts.length ? parts.map(p=>`<b>${p}</b>`).join('<span class="sep">·</span>') : `<span class="muted">${t('evCount')(evs.length)} · ${t('ccNone')}</span>`;
+}
+function card(c){
+  const done = c.ev.filter(e=>e[2]==='done').length, sec = lang==='ko'?c.secKo:c.secEn;
+  return `<div class="cc${c.arch?' arch':''}" onclick="notReady()" title="${cName(c)}">
+    <div class="cc-top"><span class="cc-ico">${ini(c)}</span>
+      <div class="cc-head"><p class="cc-name">${cName(c)}</p><p class="cc-meta">${sec} · ${t('students')(c.n)}</p></div>
+      <button class="cc-menu" onclick="event.stopPropagation(); notReady()"><i data-lucide="more-vertical" style="width:18px;height:18px"></i></button></div>
+    <p class="ev-txt cc-todo">${cardTodo(c)}<button class="r" onclick="event.stopPropagation(); go('roster','${c.id}')">${t('rosterLink')}<i data-lucide="chevron-right" style="width:16px;height:16px"></i></button></p>
+  </div>`;
+}
+
+function toggleSem(s){ window._semOpen = window._semOpen || {s2:true}; window._semOpen[s] = !window._semOpen[s]; render(); }
+function toggleTodo(){ todoOpen = !todoOpen; render(); }
+function setLang(l){ lang = l; document.getElementById('mePop').classList.remove('open'); render(); }
+function togglePop(e){ e.stopPropagation(); document.getElementById('mePop').classList.toggle('open'); }
+document.addEventListener('click', ()=>document.getElementById('mePop').classList.remove('open'));
+function toggleSb(){
+  document.body.classList.toggle('sb-collapsed');
+  const c = document.body.classList.contains('sb-collapsed');
+  document.getElementById('sbFold').innerHTML = `<i data-lucide="${c?'panel-left-open':'panel-left-close'}" style="width:20px;height:20px"></i>`;
+  lucide.createIcons();
+}
+let tt;
+function toast(msg){ document.getElementById('toastMsg').textContent = msg; const el = document.getElementById('toast'); el.classList.add('show'); clearTimeout(tt); tt = setTimeout(()=>el.classList.remove('show'), 1800); }
+function notReady(){ toast(t('notReady')); }
+
+if (location.hash.includes("en")) lang = "en";
+{ const m = location.hash.match(/roster-(c\d+)/); if (m){ view = 'roster'; rosterId = m[1]; } }
+render();
+if (location.hash.includes("collapsed")) toggleSb();
+</script>
+<script src="univ_prof_detail.js?v=38"></script>
+<script src="univ_questions.js?v=5"></script>   
+<script src="univ_files.js?v=1"></script>   
+<script src="univ_tune.js?v=2"></script>   
+<script src="univ_prof_more.js?v=5"></script>   
+<script src="univ_week.js?v=2"></script>   
+<script src="univ_ta.js?v=2"></script>   
+<script src="univ_nav.js?v=7"></script>   
+</body>
+</html>

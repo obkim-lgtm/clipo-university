@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="univ_favicon.svg?v=1">
+  <title>CLIPO University — 학생 로그인·홈 v1</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-gov.min.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  
+  <style>
+    *{ font-family:'Pretendard GOV',-apple-system,sans-serif; box-sizing:border-box; word-break:keep-all; }
+    body{ margin:0; background:#f6f7f9; color:#222631; font-size:16px; min-width:1280px; }
+    a{ text-decoration:none; color:inherit; }
+    button{ font-family:inherit; }
+    button, .btn{ display:inline-flex; align-items:center; justify-content:center; line-height:1; vertical-align:middle; }
+
+    
+    .sb{ position:fixed; top:0; bottom:0; left:0; width:248px; background:#fff; border-right:1px solid #dde1e8; display:flex; flex-direction:column; z-index:150; transition:width .2s ease; }
+    body.sb-collapsed .sb{ width:68px; }
+    .sb-top{ height:64px; display:flex; align-items:center; gap:8px; padding:0 12px 0 20px; flex-shrink:0; }
+    .sb-logo{ display:inline-flex; align-items:center; gap:8px; cursor:pointer; min-width:0; }
+    .sb-logo-tag{ height:20px; padding:0 6px; border-radius:4px; background:#e9f2ff; color:#3151c4; font-size:12px; font-weight:600; display:inline-flex; align-items:center; line-height:1; letter-spacing:.02em; white-space:nowrap; }
+    .sb-fold{ margin-left:auto; width:36px; height:36px; border:none; background:none; border-radius:6px; color:#6d7381; cursor:pointer; flex-shrink:0; }
+    .sb-fold:hover{ background:#f1f3f5; }
+    body.sb-collapsed .sb-top{ padding:0 16px; justify-content:center; }
+    body.sb-collapsed .sb-logo{ display:none; }
+    body.sb-collapsed .sb-fold{ margin:0; }
+
+    .sb-org{ margin:4px 12px 12px; padding:10px 12px; border-radius:8px; background:#f6f7f9; display:flex; align-items:center; gap:10px; min-width:0; }
+    .sb-org-ico{ width:28px; height:28px; border-radius:6px; background:#fff; border:1px solid #e4e7ec; color:#3b3f4c; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
+    .sb-org-name{ font-size:14px; font-weight:600; color:#222631; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    body.sb-collapsed .sb-org{ padding:10px 0; justify-content:center; background:none; }
+    body.sb-collapsed .sb-org-name{ display:none; }
+
+    .sb-scroll{ flex:1; overflow-y:auto; overflow-x:hidden; padding:0 0 8px; }
+    .si{ height:42px; display:flex; align-items:center; gap:12px; margin:0 12px 2px; padding:0 12px; border-radius:8px; color:#3b3f4c; cursor:pointer; position:relative; white-space:nowrap; font-size:15px; font-weight:500; }
+    .si:hover{ background:#f1f3f5; }
+    .si.active{ background:#e9f2ff; color:#416bff; }
+    .si svg{ width:20px; height:20px; flex-shrink:0; }
+    .si-label{ overflow:hidden; text-overflow:ellipsis; }
+    .si-tip{ position:absolute; left:52px; top:50%; transform:translateY(-50%); background:#222631; color:#fff; font-size:12px; padding:4px 8px; border-radius:4px; white-space:nowrap; display:none; z-index:300; pointer-events:none; }
+    body.sb-collapsed .si{ justify-content:center; padding:0; }
+    body.sb-collapsed .si-label{ display:none; }
+    body.sb-collapsed .si:hover .si-tip{ display:block; }
+
+    .sb-sec{ display:flex; align-items:center; justify-content:space-between; margin:18px 24px 6px; font-size:13px; font-weight:600; color:#6d7381; white-space:nowrap; }
+    body.sb-collapsed .sb-sec{ margin:14px 0 6px; justify-content:center; }
+    body.sb-collapsed .sb-sec span{ display:none; }
+    body.sb-collapsed .sb-sec:before{ content:""; width:28px; height:1px; background:#e4e7ec; }
+    .sc{ height:40px; display:flex; align-items:center; gap:10px; margin:0 12px 2px; padding:0 12px; border-radius:8px; cursor:pointer; position:relative; white-space:nowrap; font-size:14px; color:#3b3f4c; }
+    .sc:hover{ background:#f1f3f5; }
+    .sc-ini{ width:24px; height:24px; border-radius:6px; background:#e9f2ff; color:#3151c4; font-size:12px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .sc-name{ overflow:hidden; text-overflow:ellipsis; }
+    body.sb-collapsed .sc{ justify-content:center; padding:0; }
+    body.sb-collapsed .sc-name{ display:none; }
+    body.sb-collapsed .sc:hover .si-tip{ display:block; }
+
+    .sb-bottom{ border-top:1px solid #eef0f3; padding:12px 0 14px; flex-shrink:0; }
+    
+    .cr{ margin:0 12px 10px; padding:12px 14px; border-radius:8px; background:#f6f7f9; }
+    .cr-row{ display:flex; align-items:center; gap:8px; font-size:14px; color:#3b3f4c; white-space:nowrap; }
+    .cr-row svg{ width:18px; height:18px; color:#416bff; flex-shrink:0; }
+    .cr-num{ margin-left:auto; font-size:15px; font-weight:600; color:#222631; }
+    .cr-num small{ font-size:13px; font-weight:400; color:#6d7381; }
+    .cr-bar{ height:4px; border-radius:2px; background:#e4e7ec; margin:10px 0 8px; overflow:hidden; }
+    .cr-bar i{ display:block; height:100%; background:#416bff; border-radius:2px; }
+    .cr-note{ font-size:13px; color:#6d7381; margin:0; white-space:nowrap; }
+    body.sb-collapsed .cr{ padding:10px 0; background:none; display:flex; justify-content:center; position:relative; cursor:default; }
+    body.sb-collapsed .cr-row span, body.sb-collapsed .cr-bar, body.sb-collapsed .cr-note{ display:none; }
+    body.sb-collapsed .cr-num{ display:none; }
+    body.sb-collapsed .cr:hover .si-tip{ display:block; }
+    .cr .si-tip{ display:none; }
+
+    .me{ display:flex; align-items:center; gap:10px; margin:6px 12px 0; padding:8px 10px; border-radius:8px; cursor:pointer; position:relative; }
+    .me:hover{ background:#f1f3f5; }
+    .me-av{ width:32px; height:32px; border-radius:50%; background:#e9f2ff; color:#3151c4; font-size:14px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .me-txt{ min-width:0; flex:1; }
+    .me-name{ font-size:14px; font-weight:600; color:#222631; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .me-sub{ font-size:13px; color:#6d7381; white-space:nowrap; }
+    .me-chev{ color:#6d7381; width:16px; height:16px; flex-shrink:0; }
+    body.sb-collapsed .me{ justify-content:center; padding:8px 0; }
+    body.sb-collapsed .me-txt, body.sb-collapsed .me-chev{ display:none; }
+    .me-pop{ position:absolute; left:12px; right:12px; bottom:56px; background:#fff; border-radius:8px; box-shadow:0 0 1px #2226314D,0 8px 24px #00000026; padding:6px; display:none; z-index:400; min-width:208px; }
+    .me-pop.open{ display:block; }
+    body.sb-collapsed .me-pop{ left:60px; right:auto; bottom:0; }
+    .me-pop-lbl{ font-size:13px; color:#6d7381; padding:8px 12px 4px; }
+    .me-pop button{ width:100%; justify-content:flex-start; gap:10px; padding:10px 12px; border:none; background:none; border-radius:6px; font-size:15px; color:#222631; cursor:pointer; }
+    .me-pop button:hover{ background:#f6f7f9; }
+    .me-pop button svg{ width:16px; height:16px; }
+    .me-pop .chk{ margin-left:auto; color:#416bff; }
+    .me-pop-div{ height:1px; background:#f1f3f5; margin:4px 6px; }
+
+    
+    .main{ padding-left:248px; min-height:100vh; display:flex; flex-direction:column; transition:padding-left .2s; }
+    body.sb-collapsed .main{ padding-left:68px; }
+    .page{ max-width:1320px; width:100%; margin:0 auto; padding:36px 40px 0; flex:1; display:flex; flex-direction:column; }
+    .cols{ display:flex; gap:28px; align-items:flex-start; }
+    .col-main{ flex:1; min-width:0; }
+    .col-rail{ width:300px; flex-shrink:0; display:flex; flex-direction:column; gap:20px; }
+
+    
+    .todo{ margin:0 0 36px; }
+    .h2-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:0 0 14px; }
+    .h2{ font-size:22px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px; }
+    .h2 .cnt{ font-size:16px; font-weight:600; color:#416bff; }
+    .more{ background:none; border:none; padding:0; font-size:14px; color:#6d7381; cursor:pointer; gap:2px; }
+    .more:hover{ color:#222631; }
+    .todo-box{ background:#fff; border:1px solid #e6e8ec; border-radius:12px; padding:4px 20px; }
+    .todo-grid{ display:grid; grid-template-columns:1fr; }   
+    .ti{ display:flex; align-items:center; gap:8px; padding:12px 0; min-width:0; border-top:1px solid #f1f3f5; }
+    .ti:first-child{ border-top:none; }
+    .ti .dt{ width:7px; height:7px; border-radius:50%; background:#b8bdc7; flex-shrink:0; }
+    .ti .x{ flex:1; min-width:0; }
+    .ti .x b{ display:block; font-size:16px; font-weight:600; color:#222631; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ti .x small{ display:block; font-size:14px; color:#6d7381; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ti .go{ height:36px; padding:0 14px; border-radius:8px; border:1px solid #d9d9d9; background:#fff; font-size:14px; font-weight:600; color:#222631; cursor:pointer; gap:2px; white-space:nowrap; flex-shrink:0; }
+    .ti .go:hover{ background:#f6f7f9; }
+    .ti .go.pri{ background:#416bff; border-color:#416bff; color:#fff; }
+    .ti .go.pri:hover{ background:#365eef; }
+    .ti .dt{ display:none; }
+    .cc-line{ margin:18px 0 0; padding-top:14px; border-top:1px solid #f1f3f5; font-size:15px; color:#3b3f4c; display:flex; align-items:center; gap:6px; }
+    .cc-line .n{ font-weight:600; color:#222631; }
+    .cc-line .dim{ color:#9ea3ad; }
+    .cc-line .sep{ color:#c7cbd3; }
+    .ti .go:hover{ text-decoration:underline; }
+
+    
+    .tools{ display:flex; align-items:center; gap:14px; }
+    .tgl{ display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none; font-size:15px; color:#3b3f4c; }
+    .tgl-track{ width:40px; height:22px; border-radius:100px; background:#d9d9d9; position:relative; transition:background .15s; flex-shrink:0; }
+    .tgl-knob{ position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#fff; transition:left .15s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+    .tgl.on .tgl-track{ background:#416bff; } .tgl.on .tgl-knob{ left:20px; }
+    .sel{ height:38px; padding:0 36px 0 12px; border:1px solid #d9d9d9; border-radius:6px; font-size:14px; color:#3b3f4c; cursor:pointer; appearance:none; -webkit-appearance:none; background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236d7381' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 12px center; font-family:inherit; }
+    .btn-primary{ height:40px; border-radius:100px; padding:0 18px; background:#416bff; color:#fff; border:none; font-size:15px; font-weight:600; cursor:pointer; gap:6px; }
+    .btn-primary:hover{ background:#365eef; }
+
+    
+    .sem{ margin-bottom:8px; }
+    .sem-hd{ display:flex; align-items:center; gap:12px; padding:14px 0; cursor:pointer; user-select:none; }
+    .sem-title{ font-size:20px; font-weight:700; }
+    .sem-meta{ font-size:14px; color:#6d7381; }
+    .sem-chev{ margin-left:auto; color:#6d7381; transition:transform .15s; }
+    .sem.closed .sem-chev{ transform:rotate(180deg); }
+    .sem.closed .sem-body{ display:none; }
+    .sem-body{ padding-bottom:18px; }
+    .grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+
+    
+    .cc{ background:#fff; border-radius:12px; padding:22px; cursor:pointer; box-shadow:0 0 1px #2226314D,0 2px 8px #0000000F; position:relative; transition:box-shadow .12s; }
+    .cc:hover{ box-shadow:0 0 0 1.5px #ccdfff,0 4px 12px #0000001A; }
+    .cc.arch{ background:#fbfbfc; }
+    .cc-top{ display:flex; align-items:center; gap:12px; }
+    .cc-ico{ width:40px; height:40px; border-radius:10px; background:#e9f2ff; color:#3151c4; font-size:15px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .cc.arch .cc-ico{ background:#f1f3f5; color:#9ea3ad; }
+    .cc-head{ flex:1; min-width:0; }
+    .cc-name{ font-size:17px; font-weight:600; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cc.arch .cc-name{ color:#6d7381; }
+    .cc-meta{ font-size:14px; color:#6d7381; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cc-menu{ width:30px; height:30px; border:none; background:none; border-radius:6px; cursor:pointer; color:#6d7381; flex-shrink:0; }
+    .cc-menu:hover{ background:#f1f3f5; }
+    .ev{ margin-top:26px; }
+    .ev-bar{ display:flex; gap:3px; height:6px; }
+    .ev-bar i{ flex:1; border-radius:3px; background:#e4e7ec; position:relative; }
+    .ev-bar i.done{ background:#416bff; } .ev-bar i.prog{ background:#a3c3ff; }
+    .cc.arch .ev-bar i.done{ background:#c7cbd3; }
+    .ev-names{ display:flex; gap:3px; margin-top:8px; }
+    .ev-names span{ flex:1; min-width:0; font-size:13px; color:#6d7381; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ev-names span.done{ color:#3151c4; }
+    .ev-txt{ font-size:14px; color:#6d7381; margin:12px 0 0; padding-top:12px; border-top:1px solid #f1f3f5; display:flex; align-items:center; gap:6px; }
+    .ev-txt b{ font-weight:600; color:#3b3f4c; }
+
+    
+    .rail{ background:#fff; border-radius:12px; padding:20px; box-shadow:0 0 1px #2226314D,0 2px 8px #0000000F; }
+    .rail-hd{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .rail-title{ font-size:17px; font-weight:700; }
+    .nt{ display:flex; align-items:center; gap:8px; padding:8px 0; font-size:14px; color:#3b3f4c; cursor:pointer; }
+    .nt:hover{ color:#222631; }
+    .nt-txt{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .nt-date{ font-size:14px; color:#9ea3ad; flex-shrink:0; }
+    .new{ display:inline-flex; align-items:center; height:18px; padding:0 5px; border-radius:4px; background:#e9f2ff; color:#3151c4; font-size:11px; font-weight:600; line-height:1; flex-shrink:0; }
+    .res{ display:flex; align-items:flex-start; gap:12px; border-radius:8px; padding:14px 16px; background:#f4f8ff; cursor:pointer; }
+    .res + .res{ margin-top:8px; }
+    .res:hover{ background:#e9f2ff; }
+    .res svg{ width:20px; height:20px; color:#2081ff; flex-shrink:0; margin-top:1px; }
+    .res.gray{ background:#f6f7f9; } .res.gray:hover{ background:#eef0f3; } .res.gray svg{ color:#6d7381; }
+    .res-name{ font-size:16px; font-weight:600; color:#18181b; margin:0 0 4px; }
+    .res-desc{ font-size:14px; color:#3b3f4c; margin:0; line-height:1.5; }
+
+    
+    .toast{ position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(12px); opacity:0; min-width:320px; max-width:560px; padding:14px 22px 14px 16px; border-radius:4px; display:flex; align-items:center; gap:12px; font-size:15px; font-weight:600; box-shadow:0 0 1px #2226314D,0 4px 12px #00000026; z-index:9999; transition:opacity .2s,transform .2s; pointer-events:none; background:#416bff; color:#fff; }
+    .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+    .footer{ margin-top:auto; padding:48px 0 40px; display:flex; flex-direction:column; align-items:center; gap:14px; }
+    .footer-links{ display:flex; align-items:center; }
+    .footer-links a{ font-size:14px; color:#3b3f4c; padding:0 16px; }
+    .footer-links a + a{ border-left:1px solid #dde1e8; }
+    .footer-copy{ font-size:14px; color:#9aa0ad; }
+
+    
+    .view{ display:none; } .view.on{ display:block; } main.view.on{ display:flex; }
+    body.no-sb .sb{ display:none; } body.no-sb .main{ padding-left:0; }
+
+    
+    .auth{ min-height:100vh; display:flex; flex-direction:column; background:#f6f7f9; }
+    .auth-top{ height:64px; display:flex; align-items:center; padding:0 32px; }
+    .auth-lang{ margin-left:auto; display:inline-flex; border:1px solid #d9d9d9; border-radius:100px; background:#fff; padding:3px; }
+    .auth-lang button{ height:30px; padding:0 14px; border:none; background:none; border-radius:100px; font-size:14px; color:#6d7381; cursor:pointer; gap:6px; }
+    .auth-lang button.on{ background:#e9f2ff; color:#3151c4; font-weight:600; }
+    .auth-mid{ flex:1; display:flex; align-items:center; justify-content:center; padding:24px 16px 48px; }
+    .auth-card{ width:440px; background:#fff; border-radius:16px; padding:40px 40px 32px; box-shadow:0 0 1px #2226314D,0 4px 20px #0000000F; }
+    .auth-card.wide{ width:560px; }
+    .auth-brand{ display:flex; align-items:center; gap:8px; margin-bottom:28px; }
+    .auth-org{ display:flex; align-items:center; gap:8px; font-size:15px; font-weight:600; color:#3b3f4c; margin:0 0 6px; }
+    .auth-h{ font-size:26px; font-weight:700; margin:0 0 8px; }
+    .auth-sub{ font-size:16px; color:#3b3f4c; margin:0 0 28px; line-height:1.55; }
+    .fld{ margin-bottom:18px; }
+    .fld label{ display:block; font-size:14px; font-weight:600; color:#3b3f4c; margin-bottom:8px; }
+    .inp{ width:100%; height:48px; border:1px solid #d9d9d9; border-radius:8px; padding:0 14px; font-size:16px; color:#222631; font-family:inherit; outline:none; background:#fff; }
+    .inp:focus{ border-color:#416bff; box-shadow:0 0 0 3px #e9f2ff; }
+    .inp::placeholder{ color:#9ea3ad; }
+    .btn-block{ width:100%; height:50px; border-radius:8px; background:#416bff; color:#fff; border:none; font-size:16px; font-weight:600; cursor:pointer; margin-top:8px; }
+    .btn-block:hover{ background:#365eef; }
+    .btn-block:disabled{ background:#c7cbd3; cursor:not-allowed; }
+    .auth-links{ display:flex; justify-content:center; gap:16px; margin-top:18px; font-size:14px; color:#6d7381; }
+    .auth-links button{ background:none; border:none; padding:0; font-size:14px; color:#6d7381; cursor:pointer; text-decoration:underline; }
+    .auth-err{ display:none; align-items:center; gap:6px; font-size:14px; color:#f2525f; margin:-6px 0 14px; }
+    .auth-err.on{ display:flex; }
+    .demo-hint{ margin-top:22px; padding-top:16px; border-top:1px dashed #e4e7ec; font-size:13px; color:#9ea3ad; line-height:1.6; }
+
+    .inp-row{ display:flex; gap:8px; }
+    .inp-row .inp{ flex:1; min-width:0; }
+    .btn-out{ height:48px; padding:0 18px; border-radius:8px; border:1px solid #416bff; background:#fff; color:#416bff; font-size:15px; font-weight:600; cursor:pointer; flex-shrink:0; }
+    .btn-out:hover{ background:#f4f8ff; }
+    .btn-out:disabled{ border-color:#d9d9d9; color:#9ea3ad; background:#fff; cursor:not-allowed; }
+    .sent{ display:none; margin-top:4px; }
+    .sent.on{ display:block; }
+    .sent-msg{ display:flex; gap:8px; align-items:flex-start; background:#f4f8ff; border-radius:8px; padding:12px 14px; font-size:15px; color:#222631; margin:0 0 18px; line-height:1.5; }
+    .sent-msg svg{ width:18px; height:18px; color:#416bff; flex-shrink:0; margin-top:2px; }
+    .sent-msg b{ font-weight:600; }
+    .code-inp{ letter-spacing:.3em; font-weight:600; }
+    .err-line{ display:none; align-items:flex-start; gap:6px; font-size:14px; color:#f2525f; margin:-8px 0 14px; line-height:1.5; }
+    .err-line.on{ display:flex; }
+    .err-line svg{ width:16px; height:16px; flex-shrink:0; margin-top:2px; }
+    .ok-line{ display:flex; align-items:center; gap:6px; font-size:14px; color:#6d7381; margin:-8px 0 14px; }
+    .ok-line svg{ width:16px; height:16px; }
+    .ok-line.ok{ color:#1ab864; }
+    .steps{ display:flex; align-items:center; gap:8px; font-size:14px; color:#9ea3ad; margin-bottom:20px; }
+    .steps .on{ color:#416bff; font-weight:600; }
+    .steps i{ width:16px; height:1px; background:#d9d9d9; }
+    .who{ background:#f6f7f9; border-radius:10px; padding:6px 18px; margin-bottom:10px; }
+    .who-row{ display:flex; padding:11px 0; font-size:16px; }
+    .who-row + .who-row{ border-top:1px solid #eceef1; }
+    .who-row span{ width:88px; color:#6d7381; flex-shrink:0; }
+    .who-row b{ font-weight:600; color:#222631; }
+    .note{ display:flex; gap:6px; align-items:flex-start; font-size:14px; color:#3b3f4c; margin:0 0 24px; line-height:1.5; }
+    .note svg{ width:16px; height:16px; color:#416bff; flex-shrink:0; margin-top:2px; }
+    .agree{ border:1px solid #e4e7ec; border-radius:10px; }
+    .agree-row{ display:flex; align-items:center; gap:10px; padding:14px 16px; cursor:pointer; user-select:none; }
+    .agree-row + .agree-row{ border-top:1px solid #f1f3f5; }
+    .agree-row.all{ background:#f6f7f9; border-radius:10px 10px 0 0; font-weight:600; }
+    .cb{ width:20px; height:20px; border-radius:5px; border:1.5px solid #b3b3b3; background:#fff; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; color:#fff; }
+    .cb svg{ width:14px; height:14px; display:none; }
+    .agree-row.on .cb{ background:#416bff; border-color:#416bff; }
+    .agree-row.on .cb svg{ display:block; }
+    .agree-t{ flex:1; font-size:15px; color:#222631; }
+    .agree-t em{ font-style:normal; color:#416bff; font-weight:600; margin-right:4px; }
+    .agree-view{ background:none; border:none; padding:0; font-size:14px; color:#6d7381; cursor:pointer; text-decoration:underline; flex-shrink:0; }
+    .agree-detail{ display:none; margin:0 16px 14px 46px; font-size:14px; color:#3b3f4c; line-height:1.6; }
+    .agree-detail.on{ display:block; }
+    .agree-detail dt{ font-weight:600; color:#222631; margin-top:6px; }
+    .agree-detail dd{ margin:0; }
+
+    
+    .join{ display:none; background:#fff; border:1px solid #ccdfff; border-radius:12px; padding:20px 22px; margin:0 0 18px; }
+    .join.on{ display:block; }
+    .join-t{ font-size:17px; font-weight:600; margin:0 0 4px; }
+    .join-d{ font-size:14px; color:#6d7381; margin:0 0 14px; }
+    .join-row{ display:flex; gap:10px; }
+    .join-row .inp{ width:260px; height:44px; letter-spacing:.12em; text-transform:uppercase; font-weight:600; }
+    .btn-sec{ height:44px; padding:0 18px; border-radius:8px; border:1px solid #d9d9d9; background:#fff; color:#3b3f4c; font-size:15px; font-weight:500; cursor:pointer; }
+    .btn-sec:hover{ background:#f6f7f9; }
+    .btn-solid{ height:44px; padding:0 20px; border-radius:8px; border:none; background:#416bff; color:#fff; font-size:15px; font-weight:600; cursor:pointer; }
+    .btn-solid:disabled{ background:#c7cbd3; cursor:not-allowed; }
+    .join-err{ display:none; font-size:14px; color:#f2525f; margin:10px 0 0; }
+    .join-err.on{ display:block; }
+
+    
+    .sc-card{ background:#fff; border-radius:12px; padding:22px 22px 10px; cursor:pointer; box-shadow:0 0 1px #2226314D,0 2px 8px #0000000F; transition:box-shadow .12s; }
+    .sc-card:hover{ box-shadow:0 0 0 1.5px #ccdfff,0 4px 12px #0000001A; }
+    .sc-card.fresh{ box-shadow:0 0 0 2px #416bff,0 4px 12px #0000001A; }
+    .ev-list{ margin-top:16px; border-top:1px solid #f1f3f5; }
+    .evr{ display:flex; align-items:center; gap:10px; padding:11px 0; font-size:15px; }
+    .evr + .evr{ border-top:1px solid #f6f7f9; }
+    .evr-n{ flex:1; min-width:0; color:#222631; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .evr-n small{ font-size:14px; color:#6d7381; margin-left:8px; }
+    .evr-s{ font-size:14px; color:#6d7381; flex-shrink:0; }
+    .evr-s.go{ color:#3151c4; font-weight:600; display:inline-flex; align-items:center; gap:1px; }
+    .evr-s.go:hover{ text-decoration:underline; }
+    .ev-empty{ font-size:14px; color:#9ea3ad; padding:14px 0 12px; margin:0; }
+  </style>
+  <link rel="stylesheet" href="univ_detail.css?v=22">   
+  <link rel="stylesheet" href="univ_theme.css?v=4">   
+  <link rel="stylesheet" href="univ_auth.css?v=4">   
+  <link rel="stylesheet" href="univ_mobile.css?v=3">   
+</head>
+<body>
+
+
+<section class="view" id="v-login">
+  <div class="auth">
+    <div class="auth-top">
+      <div class="auth-lang"><button data-l="ko" onclick="setLang('ko')">한국어</button><button data-l="en" onclick="setLang('en')">English</button></div>
+    </div>
+    <div class="auth-mid">
+      <div class="auth-card">
+        <div class="auth-brand">
+          <svg width="95" height="20" viewBox="0 0 76 16" fill="none"><use href="#clipoLogo"/></svg>
+          <span class="sb-logo-tag">University</span>
+        </div>
+        <p class="auth-org"><i data-lucide="landmark" style="width:16px;height:16px"></i><span data-t="org"></span></p>
+        <h1 class="auth-h" data-t="loginH"></h1>
+        <p class="auth-sub" data-t="loginSub"></p>
+        <div class="fld"><label data-t="idLbl"></label><input class="inp" id="loginId" autocomplete="off" oninput="clearErr()"></div>
+        <div class="fld"><label data-t="pwLbl"></label><input class="inp" id="loginPw" type="password" oninput="clearErr()" onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <div class="auth-err" id="loginErr"><i data-lucide="circle-alert" style="width:16px;height:16px"></i><span data-t="loginErr"></span></div>
+        <button class="btn-block" onclick="doLogin()" data-t="loginBtn"></button>
+        <div class="auth-links"><button onclick="startVerify('first')" data-t="firstLink"></button><button onclick="startVerify('reset')" data-t="forgot"></button></div>
+        <p class="demo-hint" data-t="demoHint"></p>
+      </div>
+    </div>
+    <footer class="footer" style="padding:0 0 32px">
+      <div class="footer-links"><a href="#" onclick="notReady();return false" data-t="terms"></a><a href="#" onclick="notReady();return false" data-t="privacy"></a><a href="#" onclick="notReady();return false" data-t="help"></a></div>
+      <div class="footer-copy">© DataDriven Inc.</div>
+    </footer>
+  </div>
+</section>
+
+
+<section class="view" id="v-verify">
+  <div class="auth">
+    <div class="auth-top">
+      <div class="auth-lang"><button data-l="ko" onclick="setLang('ko')">한국어</button><button data-l="en" onclick="setLang('en')">English</button></div>
+    </div>
+    <div class="auth-mid">
+      <div class="auth-card">
+        <div class="auth-brand">
+          <svg width="95" height="20" viewBox="0 0 76 16" fill="none"><use href="#clipoLogo"/></svg>
+          <span class="sb-logo-tag">University</span>
+        </div>
+        <div class="steps" id="stepsV"></div>
+        <h1 class="auth-h" id="verifyH"></h1>
+        <p class="auth-sub" data-t="verifySub"></p>
+        <div class="fld"><label data-t="sidOrMail"></label>
+          <div class="inp-row"><input class="inp" id="vSid" maxlength="60" oninput="vSidInput()" onkeydown="if(event.key==='Enter')sendCode()"><button class="btn-out" id="vSend" disabled onclick="sendCode()" data-t="sendCode"></button></div>
+        </div>
+        <div class="err-line" id="vSidErr"><i data-lucide="circle-alert"></i><span id="vSidErrMsg"></span></div>
+        <div class="sent" id="vSent">
+          <p class="sent-msg"><i data-lucide="mail-check"></i><span id="vSentMsg"></span></p>
+          <div class="fld"><label data-t="codeLbl"></label><input class="inp code-inp" id="vCode" inputmode="numeric" maxlength="6" placeholder="······" oninput="vCodeInput()" onkeydown="if(event.key==='Enter')checkCode()"></div>
+          <div class="err-line" id="vCodeErr"><i data-lucide="circle-alert"></i><span data-t="codeWrong"></span></div>
+          <button class="btn-block" id="vGo" disabled onclick="checkCode()" data-t="next"></button>
+          <p class="note" style="margin:16px 0 0"><i data-lucide="info"></i><span data-t="noMail"></span></p>
+        </div>
+        <div class="auth-links"><button onclick="go('login')" data-t="toLogin"></button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-pw">
+  <div class="auth">
+    <div class="auth-top">
+      <div class="auth-lang"><button data-l="ko" onclick="setLang('ko')">한국어</button><button data-l="en" onclick="setLang('en')">English</button></div>
+    </div>
+    <div class="auth-mid">
+      <div class="auth-card">
+        <div class="auth-brand">
+          <svg width="95" height="20" viewBox="0 0 76 16" fill="none"><use href="#clipoLogo"/></svg>
+          <span class="sb-logo-tag">University</span>
+        </div>
+        <div class="steps" id="stepsP"></div>
+        <h1 class="auth-h" data-t="pwH"></h1>
+        <p class="auth-sub" data-t="pwSub"></p>
+        <div class="fld"><label data-t="pwNew"></label><input class="inp" id="pw1" type="password" oninput="pwInput()"></div>
+        <div class="ok-line" id="pwRule"><i data-lucide="check"></i><span data-t="pwRule"></span></div>
+        <div class="fld"><label data-t="pwAgain"></label><input class="inp" id="pw2" type="password" oninput="pwInput()" onkeydown="if(event.key==='Enter')savePw()"></div>
+        <div class="err-line" id="pwMis"><i data-lucide="circle-alert"></i><span data-t="pwMismatch"></span></div>
+        <button class="btn-block" id="pwGo" disabled onclick="savePw()"></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="view" id="v-consent">
+  <div class="auth">
+    <div class="auth-top">
+      <div class="auth-lang"><button data-l="ko" onclick="setLang('ko')">한국어</button><button data-l="en" onclick="setLang('en')">English</button></div>
+    </div>
+    <div class="auth-mid">
+      <div class="auth-card wide">
+        <div class="auth-brand">
+          <svg width="95" height="20" viewBox="0 0 76 16" fill="none"><use href="#clipoLogo"/></svg>
+          <span class="sb-logo-tag">University</span>
+        </div>
+        <div class="steps" id="stepsC"></div>
+        <h1 class="auth-h" data-t="consentH"></h1>
+        <p class="auth-sub" data-t="consentSub"></p>
+        <div class="who">
+          <div class="who-row"><span data-t="sid"></span><b>202312345</b></div>
+          <div class="who-row"><span data-t="sname"></span><b data-t="stuName"></b></div>
+          <div class="who-row"><span data-t="sdept"></span><b data-t="stuDept"></b></div>
+          <div class="who-row"><span data-t="smail"></span><b>kimseoyeon23@dd.ac.kr</b></div>
+        </div>
+        <p class="note"><i data-lucide="info"></i><span data-t="wrongInfo"></span></p>
+
+        <div class="agree">
+          <div class="agree-row all" id="agAll" onclick="toggleAgree('all')"><span class="cb"><i data-lucide="check"></i></span><span class="agree-t" data-t="agAll"></span></div>
+          <div class="agree-row" id="ag1" onclick="toggleAgree('ag1')"><span class="cb"><i data-lucide="check"></i></span><span class="agree-t"><em data-t="req"></em><span data-t="ag1"></span></span><button class="agree-view" onclick="event.stopPropagation(); toggleDetail('d1')" data-t="view"></button></div>
+          <dl class="agree-detail" id="d1">
+            <dt data-t="dItemT"></dt><dd data-t="dItem"></dd>
+            <dt data-t="dPurT"></dt><dd data-t="dPur"></dd>
+            <dt data-t="dKeepT"></dt><dd data-t="dKeep"></dd>
+          </dl>
+          <div class="agree-row" id="ag2" onclick="toggleAgree('ag2')"><span class="cb"><i data-lucide="check"></i></span><span class="agree-t"><em data-t="req"></em><span data-t="ag2"></span></span><button class="agree-view" onclick="event.stopPropagation(); toggleDetail('d2')" data-t="view"></button></div>
+          <dl class="agree-detail" id="d2"><dd data-t="dAi"></dd></dl>
+        </div>
+        <button class="btn-block" id="startBtn" style="margin-top:24px" disabled onclick="go('pw')" data-t="startBtn"></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<aside class="sb">
+  <div class="sb-top">
+    <a class="sb-logo" href="#home" title="홈으로">
+      <svg width="76" height="16" viewBox="0 0 76 16" fill="none"><use href="#clipoLogo"/></svg>
+      <span class="sb-logo-tag">University</span>
+    </a>
+    <button class="sb-fold" onclick="toggleSb()" id="sbFold"><i data-lucide="panel-left-close" style="width:20px;height:20px"></i></button>
+  </div>
+  <div class="sb-org"><span class="sb-org-ico"><i data-lucide="landmark" style="width:16px;height:16px"></i></span><span class="sb-org-name" data-t="org"></span></div>
+  <div class="sb-scroll">
+    <nav id="nav"></nav>
+    <div class="sb-sec"><span data-t="secCourses"></span></div>
+    <div id="sbCourses"></div>
+  </div>
+  <div class="sb-bottom">
+    <div id="navBottom"></div>
+    <div class="me" onclick="togglePop(event)">
+      <span class="me-av" data-t="avatar"></span>
+      <div class="me-txt"><div class="me-name" data-t="stuName"></div><div class="me-sub">202312345</div></div>
+      <i data-lucide="chevrons-up-down" class="me-chev"></i>
+      <div class="me-pop" id="mePop" onclick="event.stopPropagation()">
+        <div class="me-pop-lbl" data-t="langLbl"></div>
+        <button onclick="setLang('ko')"><i data-lucide="globe"></i>한국어<i data-lucide="check" class="chk" id="chk-ko"></i></button>
+        <button onclick="setLang('en')"><i data-lucide="globe"></i>English<i data-lucide="check" class="chk" id="chk-en"></i></button>
+        <div class="me-pop-div"></div>
+        <button onclick="notReady()"><i data-lucide="user-round"></i><span data-t="myInfo"></span></button>
+        <button onclick="go('login')"><i data-lucide="log-out"></i><span data-t="logout"></span></button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="main view" id="v-home">
+  <div class="page">
+    <div class="u-top"><div><h1 data-t="greetH"></h1><p data-t="greetP"></p></div><span class="u-term" data-t="termNow"></span></div>
+    <div class="cols">
+      <div class="col-main">
+        <section class="todo" id="todoSec">
+          <div class="h2-row">
+            <h2 class="h2"><span data-t="todo"></span><span class="cnt" id="todoCnt"></span></h2>
+          </div>
+          <div class="todo-box"><div class="todo-grid" id="todoGrid"></div></div>
+        </section>
+
+        <div class="h2-row">
+          <h2 class="h2" data-t="myCourses"></h2>
+          <div class="tools">
+            <button class="btn-primary" onclick="openJoin()"><i data-lucide="plus" style="width:18px;height:18px"></i><span data-t="joinBtn"></span></button>
+          </div>
+        </div>
+        <div class="join" id="join">
+          <p class="join-t" data-t="joinT"></p>
+          <p class="join-d" data-t="joinD"></p>
+          <div class="join-row">
+            <input class="inp" id="joinCode" maxlength="6" placeholder="H3XP6L" oninput="onCode()" onkeydown="if(event.key==='Enter')doJoin()">
+            <button class="btn-solid" id="joinGo" disabled onclick="doJoin()" data-t="joinGo"></button>
+            <button class="btn-sec" onclick="closeJoin()" data-t="cancel"></button>
+          </div>
+          <p class="join-err" id="joinErr" data-t="joinErr"></p>
+        </div>
+        <div id="sems"></div>
+      </div>
+
+      <aside class="col-rail">
+        <div class="h2-row"><h2 class="h2" id="weekH">이번 주</h2></div>   
+        <div class="rail wk-box" id="weekBox"></div>
+        <div class="rail">
+          <div class="rail-hd"><span class="rail-title" data-t="notice"></span><button class="more" onclick="notReady()"><span data-t="all"></span><i data-lucide="chevron-right" style="width:16px;height:16px"></i></button></div>
+          <div id="notices"></div>
+        </div>
+      </aside>
+    </div>
+    <div class="view" id="v-detail"></div>   
+    <footer class="footer">
+      <div class="footer-links"><a href="#" onclick="notReady();return false" data-t="terms"></a><a href="#" onclick="notReady();return false" data-t="privacy"></a><a href="#" onclick="notReady();return false" data-t="help"></a></div>
+      <div class="footer-copy">© DataDriven Inc.</div>
+    </footer>
+  </div>
+</main>
+
+<svg width="0" height="0" style="position:absolute"><defs><symbol id="clipoLogo" viewBox="0 0 76 16"><path d="M11.3613 4.03516H4.09668V11.9629H8.88281L8.88086 11.9648H15.6016V16H4.02539C1.80242 15.9998 0 14.223 0 12.0322V3.96777C0 1.77696 1.80242 0.000177874 4.02539 0H15.4561L11.3613 4.03516ZM22.0703 11.9648H33.5781V16H22.002C19.7788 16 17.9756 14.2231 17.9756 12.0322V0H22.0703V11.9648ZM40.0459 16H35.9521V0H40.0459V16ZM54.5381 0C56.4564 0 58.0138 1.53228 58.0186 3.42285L58.0166 3.4248V8.54297C58.014 10.4333 56.4567 11.9648 54.5361 11.9648H46.5107L42.416 16V0H54.5381ZM71.9746 0C74.0086 0.000134956 75.6887 1.49046 75.958 3.42285H76V12.5771H75.958C75.6887 14.5095 74.011 15.9999 71.9746 16H64.4238C62.3897 16 60.7098 14.5096 60.4404 12.5771C60.4145 12.398 60.3984 12.2184 60.3984 12.0322V3.96777C60.3984 3.78159 60.4145 3.60205 60.4404 3.42285C60.7098 1.49037 62.3873 0 64.4238 0H71.9746ZM64.4922 12.5771H71.9062V3.42285H64.4922V12.5771ZM46.5107 3.42285V8.54004H53.9238V3.42285H46.5107Z" fill="#365EEF"/></symbol></defs></svg>
+
+<div class="toast" id="toast"><i data-lucide="info" style="width:18px;height:18px"></i><span id="toastMsg"></span></div>
+
+<script>
+const T = {
+  ko:{
+    org:'DD대학교 사범대학', secCourses:'이번 학기 강좌',
+    greetH:'안녕하세요, 김서연', greetP:'제출할 과제 3개, 새 피드백 1개가 있어요.', termNow:'2026년 2학기',
+    loginH:'로그인', loginSub:'학생도 교수도 학교 이메일로 로그인해요.',
+    idLbl:'학교 이메일', pwLbl:'비밀번호', loginBtn:'로그인', forgot:'비밀번호를 잊었어요',
+    loginErr:'학교 이메일과 비밀번호를 입력해 주세요.', loginWrong:'이메일 또는 비밀번호가 맞지 않아요. 비밀번호가 기억나지 않으면 「비밀번호를 잊었어요」로 다시 만들어요.',
+    demoHint:'시안 안내: lee@dd.ac.kr → 교수 홈, jung.ta@dd.ac.kr → 조교 화면, 그 밖의 이메일 → 학생 홈, 비밀번호 wrong → 틀린 경우 · 처음 로그인: kimseoyeon23@dd.ac.kr(학생) 또는 lee@…(교수), 코드는 숫자 6자리 아무거나',
+    firstLink:'처음 로그인해요', toLogin:'로그인으로 돌아가기',
+    stepNames:['이메일 인증','정보 확인·동의','비밀번호 만들기'],
+    verifyFirstH:'학교 이메일로 본인 확인', verifyResetH:'비밀번호 다시 만들기',
+    verifySub:'명단에 등록된 학교 이메일로 확인 코드를 보내요. 다른 사람이 내 이름으로 들어오지 못하게 하는 절차예요.',
+    sendCode:'코드 받기', sidUnknown:'등록되지 않은 이메일이에요. 학생은 담당 교수님께 수강생 등록을, 교수님은 고객센터에 계정을 요청해 주세요.',
+    sidOrMail:'학교 이메일',
+    sentTo:m=>`<b>${m}</b>로 6자리 코드를 보냈어요. 메일함을 확인해 주세요.`, codeLbl:'확인 코드', codeWrong:'코드가 맞지 않아요. 메일을 다시 확인해 주세요.',
+    next:'다음', resend:'코드 다시 받기', resent:'코드를 다시 보냈어요',
+    noMail:'메일이 안 오면 스팸함을 확인해 주세요.',
+    pwH:'비밀번호 만들기', pwSub:'다음부터는 학교 이메일과 이 비밀번호로 로그인해요.',
+    pwNew:'새 비밀번호', pwAgain:'새 비밀번호 확인', pwRule:'8자 이상, 영문과 숫자를 섞어 주세요', pwMismatch:'두 비밀번호가 달라요.',
+    pwStart:'시작하기', pwSave:'비밀번호 바꾸기', pwDone:'비밀번호를 바꿨어요', welcome:'환영해요! 수강 중인 강좌를 확인해 보세요.',
+    consentH:'처음 오셨네요', consentSub:'내 정보가 맞는지 확인하고 이용에 동의해 주세요. 이 화면은 처음 한 번만 보여요.',
+    sid:'학번', sname:'이름', sdept:'학과', smail:'학교 이메일', stuName:'김서연', stuDept:'국어교육과', avatar:'김',
+    wrongInfo:'정보가 다르면 담당 교수님께 알려 주세요. 교수님이 수강생 명단을 고칠 수 있어요.',
+    agAll:'모두 동의', req:'[필수]', ag1:'개인정보 수집·이용 동의', ag2:'AI 채점·피드백 이용 안내 확인', view:'내용 보기',
+    dItemT:'수집 항목', dItem:'학번, 이름, 학과, 제출한 답안과 파일',
+    dPurT:'이용 목적', dPur:'과제 제출, 채점, 피드백 제공',
+    dKeepT:'보유 기간', dKeep:'기관과 정한 이용 기간이 끝나면 파기',
+    dAi:'제출한 답안은 AI가 먼저 채점하고, 점수와 피드백은 담당 교수님이 확인한 뒤 공개돼요.',
+    startBtn:'동의하고 다음', back:'다른 이메일로 로그인',
+    nav:{home:'홈', courses:'강좌', feedback:'피드백', guide:'사용 안내', support:'고객센터'},
+    langLbl:'언어', myInfo:'내 정보', logout:'로그아웃',
+    todo:'내 할 일', myCourses:'수강 중인 강좌', joinBtn:'강좌 참여하기',
+    joinT:'강좌 코드로 참여하기', joinD:'교수님이 알려 준 6자리 강좌 코드를 입력하세요.', joinGo:'참여하기', cancel:'취소',
+    joinErr:'맞는 강좌가 없어요. 코드를 다시 확인해 주세요.',
+    joined:n=>`${n}에 참여했어요`,
+    notice:'공지', all:'전체', guides:'처음이라면',
+    terms:'이용약관', privacy:'개인정보처리방침', help:'고객센터',
+    sems:{s2:'2026년 2학기', s1:'2026년 1학기'}, semCnt:n=>`강좌 ${n}개`,
+    st:{todo:'제출 전', sub:'제출함', wait:'결과 기다리는 중', fb:'피드백 보기', soon:'공개 전'},
+    due:d=>`${d} 마감`, fbAt:d=>`피드백 도착 · ${d}`,
+    goSubmit:'제출하기', goFb:'피드백 보기', noEval:'아직 열린 평가가 없어요',
+    lineTodo:n=>`제출할 과제 ${n}`, lineFb:n=>`새 피드백 ${n}`, lineWait:n=>`결과 기다리는 중 ${n}`, lineNone:'지금 할 일 없음',
+    notReady:'시안에서는 아직 열리지 않아요',
+  },
+  en:{
+    org:'DD University College of Education', secCourses:'This term',
+    greetH:'Hello, Seoyeon', greetP:'3 assignments to submit and 1 new feedback.', termNow:'Fall 2026',
+    loginH:'Sign in', loginSub:'Students and instructors both sign in with their school email.',
+    idLbl:'School email', pwLbl:'Password', loginBtn:'Sign in', forgot:'Forgot password?',
+    loginErr:'Enter your school email and password.', loginWrong:'Email or password is incorrect. If you forgot it, use "Forgot password?" to make a new one.',
+    demoHint:'Mockup: lee@dd.ac.kr → instructor home, jung.ta@dd.ac.kr → TA view, any other email → student home · first sign-in: kimseoyeon23@dd.ac.kr (student) or lee@… (instructor), any 6-digit code',
+    firstLink:'First time here?', toLogin:'Back to sign in',
+    stepNames:['Verify school email','Confirm & consent','Create password'],
+    verifyFirstH:'Verify with your school email', verifyResetH:'Reset your password',
+    verifySub:'We send a code to the school email on your class roster, so no one else can sign in as you.',
+    sendCode:'Send code', sidUnknown:'This email is not registered. Students: ask your instructor to add you. Instructors: contact support for an account.',
+    sidOrMail:'School email',
+    sentTo:m=>`We sent a 6-digit code to <b>${m}</b>. Check your inbox.`, codeLbl:'Verification code', codeWrong:'That code does not match. Please check the email again.',
+    next:'Next', resend:'Resend code', resent:'Code sent again',
+    noMail:'No email? Check your spam folder.',
+    pwH:'Create a password', pwSub:'Next time, sign in with your school email and this password.',
+    pwNew:'New password', pwAgain:'Confirm new password', pwRule:'At least 8 characters with letters and numbers', pwMismatch:'Passwords do not match.',
+    pwStart:'Get started', pwSave:'Change password', pwDone:'Password changed', welcome:'Welcome! Here are your courses.',
+    consentH:'Welcome', consentSub:'Check your details and agree to the terms. You will only see this once.',
+    sid:'Student ID', sname:'Name', sdept:'Department', smail:'School email', stuName:'Seoyeon Kim', stuDept:'Korean Language Ed.', avatar:'S',
+    wrongInfo:'If anything is wrong, tell your instructor. They can fix the class roster.',
+    agAll:'Agree to all', req:'[Required]', ag1:'Collection and use of personal data', ag2:'How AI scoring and feedback work', view:'View',
+    dItemT:'Data collected', dItem:'Student ID, name, department, submitted answers and files',
+    dPurT:'Purpose', dPur:'Submitting work, scoring, and feedback',
+    dKeepT:'Retention', dKeep:'Deleted when the agreed service period with the institution ends',
+    dAi:'Your answers are scored by AI first. Scores and feedback are released after your instructor reviews them.',
+    startBtn:'Agree and continue', back:'Sign in with a different email',
+    nav:{home:'Home', courses:'Courses', feedback:'Feedback', guide:'User guide', support:'Help center'},
+    langLbl:'Language', myInfo:'My profile', logout:'Sign out',
+    todo:'To do', myCourses:'My courses', joinBtn:'Join a course',
+    joinT:'Join with a course code', joinD:'Enter the 6-character code your instructor gave you.', joinGo:'Join', cancel:'Cancel',
+    joinErr:'No course matches that code. Please check it again.',
+    joined:n=>`You joined ${n}`,
+    notice:'Announcements', all:'All', guides:'New here?',
+    terms:'Terms', privacy:'Privacy', help:'Help center',
+    sems:{s2:'Fall 2026', s1:'Spring 2026'}, semCnt:n=>`${n} courses`,
+    st:{todo:'Not submitted', sub:'Submitted', wait:'Being scored', fb:'View feedback', soon:'Not released'},
+    due:d=>`Due ${d}`, fbAt:d=>`Feedback · ${d}`,
+    goSubmit:'Submit', goFb:'View feedback', noEval:'No assessments yet',
+    lineTodo:n=>`${n} to submit`, lineFb:n=>`${n} new feedback`, lineWait:n=>`${n} awaiting results`, lineNone:'Nothing due',
+    notReady:'Not available in this mockup yet',
+  }
+};
+let lang = 'ko';
+const t = k => T[lang][k];
+const L = o => lang==='ko' ? o.ko : o.en;
+
+const NAV = [{k:'home', ic:'home', active:true},{k:'courses', ic:'library-big'},{k:'feedback', ic:'message-square-text'}];
+const NAV_BOTTOM = [{k:'guide', ic:'book-open'},{k:'support', ic:'help-circle'}];
+
+
+const COURSES = [
+  
+  {id:'c3', sem:'s2', ko:'국어교육론', en:'Korean Language Education', profKo:'이정민 교수', profEn:'Prof. Jeongmin Lee', secKo:'02분반', secEn:'Sec. 02',
+    ev:[{ko:'과제 1',en:'Essay 1',st:'fb',d:'10.02'},{ko:'과제 2',en:'Essay 2',st:'todo',d:'10.21'},{ko:'기말고사',en:'Final',st:'todo',way:'scan'}]},
+  {id:'c1', sem:'s2', ko:'교육평가', en:'Educational Assessment', profKo:'이정민 교수', profEn:'Prof. Jeongmin Lee', secKo:'01분반', secEn:'Sec. 01',
+    ev:[{ko:'과제 0 · 자기소개 글',en:'Essay 0 · Introduce yourself',st:'fb',d:'09.12'},{ko:'과제 1 · 평가 설계 비평',en:'Essay 1 · Critique of a design',st:'fb',d:'09.26'},
+        {ko:'쪽지시험 1',en:'Quiz 1',st:'sub',way:'scan'},{ko:'쪽지시험 2',en:'Quiz 2',st:'sub',way:'scan'},{ko:'중간고사',en:'Midterm',st:'sub',way:'scan'},
+        {ko:'과제 2 · 루브릭 개발',en:'Essay 2 · Designing a rubric',st:'todo',d:'10.24'},{ko:'과제 3 · 평가 문항 분석',en:'Essay 3 · Item analysis',st:'todo',d:'10.10',closed:true},
+        {ko:'과제 4 · 채점기준 비교',en:'Essay 4 · Comparing rubrics',st:'todo',d:'10.31'},{ko:'기말고사',en:'Final',st:'todo',way:'scan'}]},
+  {id:'c2', sem:'s2', ko:'사회교육 논리 및 논술', en:'Logic & Writing in Social Studies Ed.', profKo:'이정민 교수', profEn:'Prof. Jeongmin Lee', secKo:'01분반', secEn:'Sec. 01',
+    ev:[{ko:'과제 1',en:'Essay 1',st:'fb',d:'09.19'},{ko:'과제 2',en:'Essay 2',st:'sub'},{ko:'중간고사',en:'Midterm',st:'fb',d:'10.17',fresh:true,way:'scan'},{ko:'기말고사',en:'Final',st:'todo',way:'scan'}]},
+  {id:'c5', sem:'s1', ko:'교육과정 및 교육평가', en:'Curriculum & Assessment', profKo:'이정민 교수', profEn:'Prof. Jeongmin Lee', secKo:'03분반', secEn:'Sec. 03',
+    ev:[{ko:'과제 1',en:'Essay 1',st:'fb',d:'04.11'},{ko:'중간고사',en:'Midterm',st:'fb',d:'04.25',way:'scan'},{ko:'기말고사',en:'Final',st:'fb',d:'06.27',way:'scan'}]},
+];
+
+const JOINABLE = {'H3XP6L':{id:'c4', sem:'s2', ko:'일반사회교육론', en:'Social Studies Education Theory', profKo:'이정민 교수', profEn:'Prof. Jeongmin Lee', secKo:'01분반', secEn:'Sec. 01', ev:[], fresh:true}};
+
+const NOTICES = [
+  {ko:'시험 답안은 담당 교수님이 스캔해서 올려요', en:'Instructors upload scanned exam answers', d:'10.16', isNew:true},
+  {ko:'11월 2일(일) 02:00~04:00 점검 안내', en:'Maintenance: Nov 2, 02:00–04:00 KST', d:'10.14'},
+];
+const GUIDES = [
+  {ic:'book-open', ko:['학생 사용 안내','과제 내기부터 피드백 보기까지 한 번에 봐요.'], en:['Student guide','From submitting work to reading feedback.']},
+  {ic:'file-text', ko:['과제 파일 올리는 법','PDF로 올리면 AI가 답안을 더 정확하게 읽어요.'], en:['Uploading your work','PDFs help the AI read your answers accurately.']},
+];
+
+let view = 'login', joinedIds = [];
+
+function go(v){ view = v; location.hash = v; render(); window.scrollTo(0,0); }
+
+function render(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(el=>{ const v = t(el.dataset.t); if (typeof v === 'string') el.textContent = v; });
+  document.querySelectorAll('.auth-lang button').forEach(b=>b.classList.toggle('on', b.dataset.l===lang));
+  ['login','verify','consent','pw','home'].forEach(v=>document.getElementById('v-'+v).classList.toggle('on', v===view));
+  document.body.classList.toggle('no-sb', view!=='home');
+  document.getElementById('loginId').placeholder = 'name@dd.ac.kr';
+
+  if (view==='home') renderHome();
+  renderAuth();
+  document.getElementById('chk-ko').style.visibility = lang==='ko'?'visible':'hidden';
+  document.getElementById('chk-en').style.visibility = lang==='en'?'visible':'hidden';
+  lucide.createIcons();
+}
+
+const cName = c => lang==='ko' ? c.ko : c.en;
+const allCourses = () => [...COURSES.filter(c=>c.sem==='s2'), ...joinedIds.map(k=>JOINABLE[k]), ...COURSES.filter(c=>c.sem==='s1')];
+
+function renderHome(){
+  const navItem = n=>`<div class="si${n.active?' active':''}" onclick="${n.active?'':'notReady()'}"><i data-lucide="${n.ic}"></i><span class="si-label">${T[lang].nav[n.k]}</span><span class="si-tip">${T[lang].nav[n.k]}</span></div>`;
+  document.getElementById('nav').innerHTML = NAV.map(navItem).join('');
+  document.getElementById('navBottom').innerHTML = NAV_BOTTOM.map(navItem).join('');
+  const cur = allCourses().filter(c=>c.sem==='s2');
+  document.getElementById('sbCourses').innerHTML = cur.map(c=>`<div class="sc" onclick="notReady()" title="${cName(c)}"><span class="sc-ini">${cName(c)[0]}</span><span class="sc-name">${cName(c)}</span><span class="si-tip">${cName(c)}</span></div>`).join('');
+
+  
+  const todo = [];
+  cur.forEach(c=>c.ev.forEach(e=>{ if (e.st==='todo' && !e.closed && e.way!=='scan') todo.push({c, e, kind:'todo'}); }));
+  todo.sort((a,b)=>a.e.d.localeCompare(b.e.d));
+  cur.forEach(c=>c.ev.forEach(e=>{ if (e.fresh) todo.push({c, e, kind:'fb'}); }));
+  document.getElementById('todoSec').style.display = todo.length ? '' : 'none';
+  document.getElementById('todoCnt').textContent = todo.length;
+  document.getElementById('todoGrid').innerHTML = todo.map(x=>{
+    const sub = x.kind==='todo' ? t('due')(x.e.d) : t('fbAt')(x.e.d);
+    const go = x.kind==='todo' ? t('goSubmit') : t('goFb');
+    return `<div class="ti"><div class="x"><b>${L(x.e)}</b><small>${cName(x.c)} · ${sub}</small></div><button class="go${x.kind==='todo'?' pri':''}" onclick="notReady()">${go}<i data-lucide="chevron-right" style="width:16px;height:16px"></i></button></div>`;
+  }).join('');
+
+  
+  const open = window._semOpen || {s2:true};
+  document.getElementById('sems').innerHTML = ['s2','s1'].map(s=>{
+    const cs = allCourses().filter(c=>c.sem===s);
+    return `<section class="sem${open[s]?'':' closed'}"><div class="sem-hd" onclick="toggleSem('${s}')"><span class="sem-title">${T[lang].sems[s]}</span><span class="sem-meta">${t('semCnt')(cs.length)}</span><i data-lucide="chevron-up" class="sem-chev"></i></div>
+      <div class="sem-body"><div class="grid">${cs.map(card).join('')}</div></div></section>`;
+  }).join('');
+
+  document.getElementById('notices').innerHTML = NOTICES.map(n=>`<div class="nt" onclick="notReady()">${n.isNew?'<span class="new">NEW</span>':''}<span class="nt-txt">${L(n)}</span><span class="nt-date">${n.d}</span></div>`).join('');
+}
+
+function card(c){
+  const sec = lang==='ko'?c.secKo:c.secEn, prof = lang==='ko'?c.profKo:c.profEn;
+  
+  const todo = c.ev.filter(e=>e.st==='todo' && !e.closed && e.way!=='scan').length, fresh = c.ev.filter(e=>e.fresh).length, wait = c.ev.filter(e=>e.st==='sub').length;
+  const parts = [];
+  if (todo) parts.push(`<span class="n">${t('lineTodo')(todo)}</span>`);
+  if (fresh) parts.push(`<span class="n">${t('lineFb')(fresh)}</span>`);
+  if (!parts.length && wait) parts.push(`<span>${t('lineWait')(wait)}</span>`);
+  if (!parts.length) parts.push(`<span class="dim">${c.ev.length ? t('lineNone') : t('noEval')}</span>`);
+  return `<div class="sc-card${c.fresh && c.ev.length===0 ? ' fresh':''}" onclick="notReady()" title="${cName(c)}" style="padding-bottom:20px">
+    <div class="cc-top"><span class="cc-ico">${cName(c)[0]}</span>
+      <div class="cc-head"><p class="cc-name">${cName(c)}</p><p class="cc-meta">${prof} · ${sec}</p></div></div>
+    <p class="cc-line">${parts.join('<span class="sep">·</span>')}</p></div>`;
+}
+
+
+function doLogin(){
+  const id = document.getElementById('loginId').value.trim(), pw = document.getElementById('loginPw').value;
+  if (!id || !pw){ document.getElementById('loginErr').classList.add('on'); return; }
+  if (pw==='wrong'){ document.getElementById('loginErr').querySelector('span').textContent = t('loginWrong'); document.getElementById('loginErr').classList.add('on'); return; }
+  if (PROF.has(id.toLowerCase())){ location.href = staffHome(id.toLowerCase()); return; }
+  go('home');
+}
+
+
+
+const ROSTER_MAIL = {'kimseoyeon23@dd.ac.kr':1, 'lee@dd.ac.kr':1, 'jung.ta@dd.ac.kr':1};
+const PROF = new Set(['lee@dd.ac.kr','jung.ta@dd.ac.kr']);   
+const staffHome = id => 'univ_home_v1_261019.html' + (/\.ta@/.test(id) ? '?role=ta' : '') + (lang==='en'?'#en':'');
+const isProfId = v => PROF.has((v||'').toLowerCase());
+let vMode = 'first', vSentSid = null;
+function startVerify(mode){
+  vMode = mode; vSentSid = null;
+  ['vSid','vCode'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('vSend').disabled = true;
+  ['vSidErr','vCodeErr'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById('vSent').classList.remove('on');
+  ['pw1','pw2'].forEach(id=>document.getElementById(id).value='');
+  go('verify');
+}
+function vSidInput(){
+  const el = document.getElementById('vSid'); el.value = el.value.trim();
+  document.getElementById('vSend').disabled = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(el.value);
+  document.getElementById('vSidErr').classList.remove('on');
+  if (vSentSid && el.value !== vSentSid){ vSentSid = null; document.getElementById('vSent').classList.remove('on'); }
+}
+function sendCode(again){
+  const sid = document.getElementById('vSid').value.toLowerCase();
+  if (!ROSTER_MAIL[sid]){ document.getElementById('vSidErrMsg').textContent = t('sidUnknown'); document.getElementById('vSidErr').classList.add('on'); document.getElementById('vSent').classList.remove('on'); return; }
+  vSentSid = sid;
+  document.getElementById('vSentMsg').innerHTML = t('sentTo')(sid);
+  document.getElementById('vSent').classList.add('on');
+  document.getElementById('vSend').textContent = t('resend');
+  if (again) toast(t('resent')); else document.getElementById('vCode').focus();
+}
+function vCodeInput(){
+  const el = document.getElementById('vCode'); el.value = el.value.replace(/\D/g,'');
+  document.getElementById('vGo').disabled = el.value.length < 6;
+  document.getElementById('vCodeErr').classList.remove('on');
+}
+function checkCode(){
+  if (document.getElementById('vCode').value.length < 6){ document.getElementById('vCodeErr').classList.add('on'); return; }
+  go(vMode==='first' && !isProfId(vSentSid) ? 'consent' : 'pw');   
+}
+const pwOk = v => v.length >= 8 && /[A-Za-z]/.test(v) && /\d/.test(v);
+function pwInput(){
+  const a = document.getElementById('pw1').value, b = document.getElementById('pw2').value;
+  document.getElementById('pwRule').classList.toggle('ok', pwOk(a));
+  document.getElementById('pwMis').classList.toggle('on', b.length > 0 && a !== b);
+  document.getElementById('pwGo').disabled = !(pwOk(a) && a === b);
+}
+function savePw(){
+  if (document.getElementById('pwGo').disabled) return;
+  const first = vMode==='first';
+  if (isProfId(vSentSid||'')){ location.href = staffHome(vSentSid); return; }
+  go('home'); toast(first ? t('welcome') : t('pwDone'));
+}
+function renderAuth(){
+  const prof = isProfId(vSentSid||document.getElementById('vSid').value||'');
+  const names = prof ? [T[lang].stepNames[0], T[lang].stepNames[2]] : T[lang].stepNames;
+  const steps = n => vMode==='first' ? names.map((x,i)=>`${i?'<i></i>':''}<span class="${i===n?'on':''}">${i+1} ${x}</span>`).join('') : '';
+  document.getElementById('stepsV').innerHTML = steps(0);
+  document.getElementById('stepsC').innerHTML = steps(1);
+  document.getElementById('stepsP').innerHTML = steps(prof ? 1 : 2);
+  document.getElementById('verifyH').textContent = vMode==='first' ? t('verifyFirstH') : t('verifyResetH');
+  document.getElementById('pwGo').textContent = vMode==='first' ? t('pwStart') : t('pwSave');
+  document.getElementById('vSid').placeholder = 'name@dd.ac.kr';
+  if (vSentSid){ document.getElementById('vSentMsg').innerHTML = t('sentTo')(vSentSid); document.getElementById('vSend').textContent = t('resend'); }
+}
+function clearErr(){ const e = document.getElementById('loginErr'); e.classList.remove('on'); e.querySelector('span').textContent = t('loginErr'); }
+
+const agree = {ag1:false, ag2:false};
+function toggleAgree(k){
+  if (k==='all'){ const v = !(agree.ag1 && agree.ag2); agree.ag1 = agree.ag2 = v; } else agree[k] = !agree[k];
+  document.getElementById('ag1').classList.toggle('on', agree.ag1);
+  document.getElementById('ag2').classList.toggle('on', agree.ag2);
+  document.getElementById('agAll').classList.toggle('on', agree.ag1 && agree.ag2);
+  document.getElementById('startBtn').disabled = !(agree.ag1 && agree.ag2);
+}
+function toggleDetail(id){ document.getElementById(id).classList.toggle('on'); }
+
+function openJoin(){ document.getElementById('join').classList.add('on'); document.getElementById('joinCode').focus(); }
+function closeJoin(){ document.getElementById('join').classList.remove('on'); document.getElementById('joinCode').value=''; onCode(); }
+function onCode(){
+  const v = document.getElementById('joinCode').value.trim();
+  document.getElementById('joinGo').disabled = v.length < 6;
+  document.getElementById('joinErr').classList.remove('on');
+}
+function doJoin(){
+  const v = document.getElementById('joinCode').value.trim().toUpperCase();
+  const c = JOINABLE[v];
+  if (!c || joinedIds.includes(v)){ document.getElementById('joinErr').classList.add('on'); return; }
+  joinedIds.push(v); closeJoin(); render(); toast(t('joined')(cName(c)));
+}
+
+function toggleSem(s){ window._semOpen = window._semOpen || {s2:true}; window._semOpen[s] = !window._semOpen[s]; render(); }
+function setLang(l){ lang = l; document.getElementById('mePop').classList.remove('open'); render(); }
+function togglePop(e){ e.stopPropagation(); document.getElementById('mePop').classList.toggle('open'); }
+document.addEventListener('click', ()=>document.getElementById('mePop').classList.remove('open'));
+function toggleSb(){
+  document.body.classList.toggle('sb-collapsed');
+  const c = document.body.classList.contains('sb-collapsed');
+  document.getElementById('sbFold').innerHTML = `<i data-lucide="${c?'panel-left-open':'panel-left-close'}" style="width:20px;height:20px"></i>`;
+  lucide.createIcons();
+}
+let tt;
+function toast(msg){ document.getElementById('toastMsg').textContent = msg; const el = document.getElementById('toast'); el.classList.add('show'); clearTimeout(tt); tt = setTimeout(()=>el.classList.remove('show'), 1800); }
+function notReady(){ toast(t('notReady')); }
+
+
+(function(){
+  const h = location.hash.replace('#','');
+  if (h.endsWith('-en')) lang = 'en';
+  const v = h.replace('-en','');
+  if (['login','verify','consent','pw','home'].includes(v)) view = v;
+  render();
+})();
+</script>
+<script src="univ_stu_detail.js?v=8"></script>
+<script src="univ_stu_more.js?v=6"></script>
+<script src="univ_week.js?v=2"></script>      
+<script src="univ_auth.js?v=5"></script>   
+<script src="univ_mobile.js?v=1"></script>   
+<script src="univ_nav.js?v=7"></script>   
+</body>
+</html>
