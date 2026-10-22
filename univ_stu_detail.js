@@ -13,7 +13,7 @@ const D = {
     sent:'과제를 제출했어요', beforeDue:'마감 전까지 다시 제출할 수 있어요', lateNote:'마감이 지나면 제출할 수 없어요',
     
     fbH:'피드백', total:'총점', byCrit:'채점기준별', overall:'종합 피드백', myAns:'내 답안 보기', fbFrom:'담당 교수 확인',
-    rubric:[['논제 이해',4,4,'문제가 묻는 "수행평가 설계의 타당성" 개념을 자기 말로 정확히 설명했어요.'],['근거의 타당성',6,4,'3주차 자료의 타당도 세 요소를 근거로 든 점은 좋아요. 두 번째 근거는 사례가 없어 주장만 남았어요.'],['논리 전개',6,5,'문제 제기 → 분석 → 개선안이 한 흐름으로 이어져요. 결론에서 개선안 셋을 다시 묶어 주면 더 선명해요.'],['문장·표현',4,4,'문장이 간결하고 용어를 바르게 썼어요.']],
+    rubric:[['논제 이해',6,6,'문제가 묻는 "수행평가 설계의 타당성" 개념을 자기 말로 정확히 설명했어요.'],['근거의 타당성',9,7,'3주차 자료의 타당도 세 요소를 근거로 든 점은 좋아요. 두 번째 근거는 사례가 없어 주장만 남았어요.'],['논리 전개',9,8,'문제 제기 → 분석 → 개선안이 한 흐름으로 이어져요. 결론에서 개선안 셋을 다시 묶어 주면 더 선명해요.'],['문장·표현',6,6,'문장이 간결하고 용어를 바르게 썼어요.']],
     overallFb:'논제를 정확히 짚었고 수업 자료를 근거로 끌어온 점이 설득력 있어요. 두 번째 근거에 5주차 자료의 사례를 하나 붙이면 글이 훨씬 단단해져요. 다음 과제에서 그 부분을 시도해 보세요.',
   },
   en:{
@@ -27,12 +27,12 @@ const D = {
     doneT:'Submitted', doneD:at=>`Submitted ${at} · upload again before the due date to replace it`, changeFile:'Change file',
     sent:'Assignment submitted', beforeDue:'You can resubmit until the due date', lateNote:'No submissions after the due date',
     fbH:'Feedback', total:'Total', byCrit:'By criterion', overall:'Overall feedback', myAns:'View my answer', fbFrom:'Reviewed by instructor',
-    rubric:[['Understanding',4,4,'You explained "validity in assessment design" accurately in your own words.'],['Evidence',6,4,'Good use of the three validity elements from week 3. The second argument has no example, so it stays a claim.'],['Reasoning',6,5,'Problem → analysis → proposal flows well. Tie the three proposals together in the conclusion.'],['Expression',4,4,'Concise sentences and correct terminology.']],
+    rubric:[['Understanding',6,6,'You explained "validity in assessment design" accurately in your own words.'],['Evidence',9,7,'Good use of the three validity elements from week 3. The second argument has no example, so it stays a claim.'],['Reasoning',9,8,'Problem → analysis → proposal flows well. Tie the three proposals together in the conclusion.'],['Expression',6,6,'Concise sentences and correct terminology.']],
     overallFb:'You identified the question precisely and grounded it in course materials, which is convincing. Add one case from week 5 to the second argument and the essay becomes much stronger. Try that next time.',
   }
 };
 const d = k => D[lang][k];
-const stuScore = (cid, idx) => 13 + ((8*5 + idx*7) % 8);   
+const stuScore = (cid, idx) => Math.round((13 + ((8*5 + idx*7) % 8))*1.5);   
 let courseId = 'c3', evalIdx = 1, submitted = {}, showAns = false, ansMode = 'orig';
 const findCourse = id => allCourses().find(c=>c.id===id);
 const evType = e => e.way==='scan' ? 'mid' : /중간|Midterm/.test(e.ko+e.en) ? 'mid' : /기말|Final/.test(e.ko+e.en) ? 'final' : 'hw';
@@ -92,8 +92,8 @@ function doSubmit(key){
 function renderFeedback(){
   const c = findCourse(courseId), e = c.ev[evalIdx-1];
   
-  const total = stuScore(courseId, evalIdx), dl = total - 17;
-  const rub = d('rubric').map((r,k)=>{ const g = k===1 ? 4 + Math.max(0, Math.min(2, dl)) : k===2 ? 5 + (dl<0 ? Math.max(-2, dl) : Math.max(0, Math.min(1, dl-2))) : r[2]; return [r[0], r[1], g, r[3]]; });
+  const total = stuScore(courseId, evalIdx), rest = total - 12;   
+  const rub = d('rubric').map((r,k)=>{ const g = k===0 || k===3 ? r[1] : k===1 ? Math.min(r[1], Math.ceil(rest/2)) : rest - Math.min(9, Math.ceil(rest/2)); return [r[0], r[1], g, r[3]]; });
   const got = rub.reduce((a,r)=>a+r[2],0), max = rub.reduce((a,r)=>a+r[1],0);
   return stuHead(c, L(e)) + `
   <div class="score-hero"><div><div class="score-big">${got}<em>/ ${max}</em></div><div class="score-sub">${d('fbFrom')} · ${e.d}</div></div>

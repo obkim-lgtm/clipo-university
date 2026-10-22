@@ -1,7 +1,7 @@
 
 const TD = {
   ko:{ h:'채점 맞춰 보기', sub:'답안 한 장을 먼저 채점해 보고, 생각한 점수와 다르면 그 자리에서 기준을 고쳐요. 학생 전체를 채점하기 전에 확인할 수 있어요.',
-    entry:'한 명 먼저 맞춰 보기', srcStu:'낸 학생 답안으로', srcStuD:'이미 낸 학생 한 명을 골라요. 결과는 그 학생의 AI 채점으로 남아서 나중에 다시 채점하지 않아도 돼요.',
+    entry:'미리 채점해 보기', srcStu:'낸 학생 답안으로', srcStuD:'이미 낸 학생 한 명을 골라요. 결과는 그 학생의 AI 채점으로 남아서 나중에 다시 채점하지 않아도 돼요.',
     srcFile:'답안 파일 올려서', srcFileD:'아직 답안을 받기 전이면 답안 한 장을 올려요. 지난 학기 답안이나 예시 답안도 돼요.',
     pickT:'누구의 답안으로 채점해 볼까요?', pickD:'아직 AI 채점을 하지 않은 학생만 보여요.', upT:'답안 한 장 올리기', upD:'PDF나 사진 한 장이면 돼요. 학생 한 명의 답안만 올려 주세요.',
     drop:'파일을 끌어다 놓거나 눌러서 고르기', dropD:'PDF · JPG · PNG 한 장', other:'다른 파일', whoT:'이 답안은 누구의 답안인가요?', whoD:'등록된 학생의 답안이면 결과를 그 학생 점수로 남겨요.',
@@ -23,7 +23,7 @@ const TD = {
     why:[ '내용 타당도와 준거 타당도는 설명했지만, 세 요소 중 구인 타당도가 빠졌어요.', '서술형 한 문항으로 단원 전체를 재려는 점과, 채점 기준이 「잘함·보통」뿐인 점 두 가지를 들었어요.', '문항을 나누고 점수 항목으로 쪼개는 개선안은 있지만, 근거가 한 줄이에요.' ],
     whyFix:' 고친 기준대로 보니 모범답안의 핵심을 짚어 점수를 올렸어요.' },
   en:{ h:'Try scoring first', sub:'Score one answer first. If the score differs from what you expect, fix the criteria right there — before scoring the whole class.',
-    entry:'Try one answer first', srcStu:'From a submitted answer', srcStuD:'Pick one student who submitted. The result stays as their AI score, so you won\'t need to score them again.',
+    entry:'Preview scoring', srcStu:'From a submitted answer', srcStuD:'Pick one student who submitted. The result stays as their AI score, so you won\'t need to score them again.',
     srcFile:'Upload an answer file', srcFileD:'If no answers are in yet, upload one. Last term\'s answer or a sample answer works too.',
     pickT:'Whose answer should we try?', pickD:'Only students not yet scored by AI are listed.', upT:'Upload one answer', upD:'One PDF or photo is enough. Upload one student\'s answer only.',
     drop:'Drag a file here or click to choose', dropD:'One PDF · JPG · PNG', other:'Another file', whoT:'Whose answer is this?', whoD:'If it belongs to an enrolled student, the result stays as their score.',

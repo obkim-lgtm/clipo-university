@@ -54,7 +54,7 @@ function renderFeedbacks(){
   const all = []; allCourses().forEach(c=>c.ev.forEach((e,i)=>{ if (e.st==='fb') all.push({c,e,i}); }));
   const score = (x) => stuScore(x.c.id, x.i+1);   
   const tbl = list => `<div class="tbl-wrap" style="margin-bottom:24px"><table class="tbl"><thead><tr><th class="l">${sm('thE')}</th><th>${sm('thC')}</th><th>${sm('thScore')}</th><th>${sm('thAt')}</th><th></th></tr></thead><tbody>
-    ${list.map(x=>`<tr class="clickable" onclick="go('feedback','${x.c.id}',${x.i+1})"><td class="l">${x.e.fresh?'<span class="new" style="margin-right:6px">NEW</span>':''}<b>${L(x.e)}</b></td><td>${cName(x.c)}</td><td><b>${score(x)}</b><span class="st muted"> / 20</span></td><td>${x.e.d}</td><td><button class="act txt">${d('viewFb')}<i data-lucide="chevron-right" style="width:16px;height:16px"></i></button></td></tr>`).join('')}</tbody></table></div>`;
+    ${list.map(x=>`<tr class="clickable" onclick="go('feedback','${x.c.id}',${x.i+1})"><td class="l">${x.e.fresh?'<span class="new" style="margin-right:6px">NEW</span>':''}<b>${L(x.e)}</b></td><td>${cName(x.c)}</td><td><b>${score(x)}</b><span class="st muted"> / 30</span></td><td>${x.e.d}</td><td><button class="act txt">${d('viewFb')}<i data-lucide="chevron-right" style="width:16px;height:16px"></i></button></td></tr>`).join('')}</tbody></table></div>`;
   if (!all.length) return shead(sm('fH'), sm('fSub')) + `<div class="box" style="text-align:center;color:#6d7381">${sm('fNone')}</div>`;
   return shead(sm('fH'), sm('fSub')) + ['s2','s1'].map(sem=>{ const l = all.filter(x=>x.c.sem===sem).sort((a,b)=>(b.e.d||'').localeCompare(a.e.d||'')); return l.length ? `<p class="sem-title" style="margin:6px 0 12px">${T[lang].sems[sem]}</p>${tbl(l)}` : ''; }).join('');
 }
@@ -118,4 +118,5 @@ render = function(){
   if (h.endsWith('-en')) lang = 'en';
   if (v==='reset'){ startVerify('reset'); }
   else if (v==='home-empty'){ view='home'; render(); }
-  else if (SMORE.includes(v)){ view = v; render(); } }
+  else if (SMORE.includes(v)){ view = v; render(); }
+  else render(); }   

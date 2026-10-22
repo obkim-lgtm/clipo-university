@@ -44,7 +44,7 @@ const D = {
     rubricT:'채점기준별 점수', aiCol:'AI', meCol:'내 점수', fbT:'피드백', fbD:'AI가 쓴 초안이에요. 고쳐서 저장하면 학생에게 이 내용이 가요.',
     save:'저장', saveNext:'저장하고 다음', saved:'저장했어요',
     sampleFb:'논제에서 요구한 "수행평가 설계의 타당성" 개념을 정확히 짚었고, 3주차 자료의 평가 요소 세 가지를 근거로 들어 설득력이 있어요. 다만 두 번째 근거는 사례 없이 주장만 있어서 한 문단이 비어 보여요. 5주차 자료의 사례를 한 가지 붙이면 더 단단해져요.',
-    rubric:[['논제 이해',4,'문제가 묻는 개념을 자기 말로 정확히 설명한다'],['근거의 타당성',6,'수업 자료에서 근거를 끌어와 주장을 뒷받침한다'],['논리 전개',6,'주장·근거·결론이 한 흐름으로 이어진다'],['문장·표현',4,'문장이 간결하고 용어를 바르게 쓴다']],
+    rubric:[['논제 이해',6,'문제가 묻는 개념을 자기 말로 정확히 설명한다'],['근거의 타당성',9,'수업 자료에서 근거를 끌어와 주장을 뒷받침한다'],['논리 전개',9,'주장·근거·결론이 한 흐름으로 이어진다'],['문장·표현',6,'문장이 간결하고 용어를 바르게 쓴다']],
   },
   en:{
     tabEval:'Assessments', tabRoster:'Students', tabSet:'Settings', newEval:'New assessment',
@@ -87,7 +87,7 @@ const D = {
     rubricT:'Scores by criterion', aiCol:'AI', meCol:'Mine', fbT:'Feedback', fbD:'AI draft. Edit and save; the student sees this text.',
     save:'Save', saveNext:'Save & next', saved:'Saved',
     sampleFb:'You identified the concept of "validity in assessment design" accurately and backed it with the three criteria from week 3, which is convincing. The second argument, though, has no example, so that paragraph feels thin. One case from week 5 would make it solid.',
-    rubric:[['Understanding',4,'Explains the concept in own words'],['Evidence',6,'Draws evidence from course materials'],['Reasoning',6,'Claim, evidence and conclusion flow as one'],['Expression',4,'Concise sentences, correct terms']],
+    rubric:[['Understanding',6,'Explains the concept in own words'],['Evidence',9,'Draws evidence from course materials'],['Reasoning',9,'Claim, evidence and conclusion flow as one'],['Expression',6,'Concise sentences, correct terms']],
   }
 };
 const d = k => D[lang][k];
@@ -141,7 +141,7 @@ function subOf(cid, eid){
   return subs[k] = base.map((r,i)=>{
     const kimOut = r.sid==='202312345' && cid==='c1' && [6,7,8].includes(+eid);   
     const at = e.sub ? (kimOut || (i===4 && e.sub < cById(cid).n && (e.type==='hw' || e.unmatched || e.miss2) && !(cid==='c1' && +eid===6)) || (i===7 && (e.unmatched || e.miss2)) ? null : `10.${String(10+((i+seed)%9)).padStart(2,'0')} ${String(9+((i*3+seed)%12)).padStart(2,'0')}:${String((i*17+seed)%60).padStart(2,'0')}`) : null;
-    return {sid:r.sid, ko:r.ko, en:r.en, at, late:i===6, score:13+((i*5+seed)%8), scoring: false, pre: !!at && i >= n-preN && !(i < revN), rev: !!at && i < revN, rel: !!at && i < relN, fb:null};
+    return {sid:r.sid, ko:r.ko, en:r.en, at, late:i===6, score:Math.round((13+((i*5+seed)%8))*1.5),    scoring: false, pre: !!at && i >= n-preN && !(i < revN), rev: !!at && i < revN, rel: !!at && i < relN, fb:null};
   });
 }
 const stOf = s => !s.at ? 'none' : s.scoring ? 'scoring' : s.pre ? 'pre' : s.rel ? 'rel' : s.rev ? 'done' : 'yet';
@@ -274,7 +274,7 @@ function renderEval(){
     return `<tr class="${s.at && st!=='scoring' && st!=='pre'?'clickable':''}" onclick="${s.at && st!=='scoring' && st!=='pre'?`go('grade','${c.id}',${e.id},'${s.sid}')`:''}">
     <td>${s.sid}</td><td>${nm}</td>
     <td>${s.at ? `${s.at}${s.late && e.way==='file' ? ` <span class="tag" style="height:20px;font-size:12px;color:#b45309;background:#fff4e5">${d('late')}</span>`:''}${s.byProf ? ` <span class="tag" style="height:20px;font-size:12px">${d('howProf')}</span>`:''}` : `<span class="st muted">${d('notSub')}</span>`}</td>
-    <td>${s.at && st!=='scoring' && st!=='pre' ? `<b>${s.score}</b><span class="st muted"> / 20</span>` : '<span class="st muted">–</span>'}</td>
+    <td>${s.at && st!=='scoring' && st!=='pre' ? `<b>${s.score}</b><span class="st muted"> / 30</span>` : '<span class="st muted">–</span>'}</td>
     <td>${stTag(st)}</td>
     <td style="white-space:nowrap">${act}</td></tr>`; }).join('');
   return `<div class="ch"><div class="crumb"><a href="#" onclick="go('home');return false">${t('myCourses')}</a><i data-lucide="chevron-right" style="width:16px;height:16px"></i><a href="#" onclick="go('course','${c.id}');return false">${cName(c)}</a><i data-lucide="chevron-right" style="width:16px;height:16px"></i><span>${evName(e)}</span></div>
@@ -509,6 +509,12 @@ render = function(){
   el.classList.toggle('on', DETAIL.includes(view));
   if (DETAIL.includes(view)){
     el.innerHTML = view==='tune' ? renderTune() : view==='files' ? renderFiles() : view==='split' ? renderSplit() : view==='course' ? renderCourse() : view==='new' ? renderNew() : view==='eval' ? renderEval() : view==='newcourse' ? renderNewCourse() : view==='settings' ? renderSettings() : renderGrade();
+  }
+  if (view==='home' && !(typeof IS_TA!=='undefined' && IS_TA)){
+    const k = {rev:0, rel:0, ai:0};
+    COURSES.filter(c=>c.sem==='s2' && !c.arch).forEach(c=>evOf(c.id).forEach(e=>{ const a = nextAct(e); if (k[a]!==undefined) k[a]++; }));
+    const gp = document.querySelector('#v-home [data-t="greetP"]');
+    if (gp) gp.textContent = lang==='ko' ? `확인할 평가 ${k.rev}개, 공개할 평가 ${k.rel}개, AI 채점할 평가 ${k.ai}개가 있어요.` : `${k.rev} assessments to review, ${k.rel} to release and ${k.ai} to AI-score.`;
   }
   if (view==='roster'){ document.getElementById('rHead').innerHTML = courseHead(cById(rosterId),'roster'); }
   document.querySelectorAll('#sbCourses .sc').forEach((n,i)=>{ const c = COURSES.filter(x=>x.sem==='s2' && !x.arch)[i]; if (!c) return; n.setAttribute('onclick', `go('course','${c.id}')`); n.classList.toggle('on', rosterId===c.id && view!=='home' && view!=='newcourse'); });

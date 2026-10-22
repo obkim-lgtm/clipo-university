@@ -238,7 +238,7 @@
     .footer-copy{ font-size:14px; color:#9aa0ad; }
   </style>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap">   
-  <link rel="stylesheet" href="univ_detail.css?v=22">   
+  <link rel="stylesheet" href="univ_detail.css?v=26">   
   <link rel="stylesheet" href="univ_theme.css?v=5">   
 </head>
 <body>
@@ -455,7 +455,7 @@ if (IS_TA){
   const relOk = new URLSearchParams(location.search).get('rel')==='1';
   TODO.splice(0, TODO.length, ...TODO.filter(x=>x.c==='c1' && (relOk || x.goKo!=='공개하기')));
   document.documentElement.classList.add('ta');
-  Object.assign(T.ko, {meName:'정다은 조교', meSub:'교육평가 조교', avatar:'정', greetH:'안녕하세요, 정다은 조교', greetP:'맡은 강좌 1개 · 확인할 평가와 AI 채점할 평가가 있어요.'});
+  Object.assign(T.ko, {meName:'정다은 조교', meSub:'교육평가 조교', avatar:'정', greetH:'안녕하세요, 정다은 조교님', greetP:'맡은 강좌 1개 · 확인할 평가와 AI 채점할 평가가 있어요.'});
   Object.assign(T.en, {meName:'Daeun Jung (TA)', meSub:'TA · Educational Assessment', avatar:'D', greetH:'Hello, Daeun', greetP:'1 course as TA · assessments to review and AI-score.'});
 }
 
@@ -638,13 +638,14 @@ if (location.hash.includes("en")) lang = "en";
 render();
 if (location.hash.includes("collapsed")) toggleSb();
 </script>
-<script src="univ_prof_detail.js?v=38"></script>
+<script src="univ_prof_detail.js?v=39"></script>
 <script src="univ_questions.js?v=5"></script>   
 <script src="univ_files.js?v=1"></script>   
-<script src="univ_tune.js?v=2"></script>   
-<script src="univ_prof_more.js?v=5"></script>   
+<script src="univ_tune.js?v=3"></script>   
+<script src="univ_preview.js?v=2"></script>   
+<script src="univ_prof_more.js?v=10"></script>   
 <script src="univ_week.js?v=2"></script>   
-<script src="univ_ta.js?v=2"></script>   
-<script src="univ_nav.js?v=7"></script>   
+<script src="univ_ta.js?v=3"></script>   
+<script src="univ_nav.js?v=10"></script>   
 </body>
 </html>

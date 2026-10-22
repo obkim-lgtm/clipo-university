@@ -45,7 +45,7 @@ if (IS_TA){
   render = function(){ _rTA();
     const el = document.getElementById('v-detail');
     if (el && el.classList.contains('on') && !el.querySelector('.ta-band') && ['course','eval','roster'].includes(view)) el.insertAdjacentHTML('afterbegin', `<p class="note ta-band"><i data-lucide="user-cog"></i><span>${ta('taOnly')}</span></p>`);
-    if (view==='roster'){ const r = document.getElementById('v-roster'); if (r && !r.querySelector('.ta-band')) r.insertAdjacentHTML('afterbegin', `<p class="note ta-band"><i data-lucide="user-cog"></i><span>${ta('taOnly')}</span></p>`); }
+    if (view==='roster'){ const r = document.getElementById('v-roster'); r?.querySelector('.ta-band')?.remove(); if (r) r.insertAdjacentHTML('afterbegin', `<p class="note ta-band"><i data-lucide="user-cog"></i><span>${ta('taOnly')}</span></p>`); }
     lucide.createIcons(); };
   render();
 }
