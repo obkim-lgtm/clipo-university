@@ -9,7 +9,7 @@ const D = {
     setArch:'보관', setArchD:'학기가 끝나면 보관해요. 홈 목록에서 빠지고 「보관한 강좌 보기」로 다시 열 수 있어요. 평가와 답안은 그대로예요.', archBtn:'보관하기', unarchBtn:'보관 해제', archived:n=>`${n} 강좌를 보관했어요`, unarchived:n=>`${n} 강좌를 다시 열었어요`,
     setDel:'삭제', setDelD:'평가가 하나도 없는 강좌만 지울 수 있어요. 평가가 있으면 보관해 주세요.', delBtn:'강좌 삭제', delAsk:n=>`${n} 강좌를 지울까요? 되돌릴 수 없어요.`, deleted:n=>`${n} 강좌를 지웠어요`, delBlocked:n=>`평가 ${n}개가 있어서 지울 수 없어요`,
     thEval:'평가', thType:'답안', thDue:'마감', thSub:'제출', thRevC:'확인', thRel:'공개', thState:'상태', thSid:'학번', thName:'이름', thSubAt:'제출', thScore:'점수', thRev:'확인', thOpen:'',
-    type:{hw:'과제', mid:'중간고사', final:'기말고사'}, way:{file:'학생 제출', scan:'직접 업로드'}, wayL:{file:'학생이 PDF로 제출', scan:'교수가 답안 파일을 직접 올림'},
+    type:{hw:'과제', mid:'중간고사', final:'기말고사'}, way:{file:'학생 제출', scan:'직접 업로드'}, wayL:{file:'학생이 PDF로 제출', scan:'교수님이 답안 파일을 직접 올림'},
     aiNone:'전', aiRun:'채점 중', aiDone:'완료', rev:(a,b)=>`확인 ${a}/${b}`, relYes:'공개됨', relNo:'공개 전', noSub:'제출 없음',
     act:{wait:'제출 현황', upload:'답안 올리기', match:n=>`파일 연결 ${n}`, ai:'AI 채점', scoring:'채점 중', rev:'확인하기', rel:'공개하기', view:'결과 보기'},
     subScoring:n=>`채점 중 ${n}`, subPre:n=>`채점 전 ${n}`, aiBtn:n=>`AI 채점 · ${n}명`, noCredit:'오늘 크레딧을 다 썼어요. 내일 0시에 100으로 채워지면 이어서 채점할 수 있어요. 이미 채점된 학생은 지금 확인해도 돼요.', aiRunning:'AI가 채점하는 중이에요', aiFinished:n=>`${n}명 AI 채점이 끝났어요`, subUnm:n=>`파일 연결 ${n}`, waiting:'기다리는 중', relPart:'일부 공개',
@@ -101,7 +101,7 @@ function evOf(cid){
     
     {id:1, ko:'과제 0 · 자기소개 글',      en:'Essay 0 · Introduce yourself',      way:'file', due:'09.12', sub:40, scored:40, rev:40, relN:25},
     {id:2, ko:'과제 1 · 평가 설계 비평',    en:'Essay 1 · Critique of a design',     way:'file', due:'09.26', sub:42, scored:42, rev:42, relN:42},
-    {id:3, ko:'쪽지시험 1',                en:'Quiz 1',                             way:'scan', due:'–',     sub:40, scored:40, rev:0,  relN:0, miss2:true},   
+    {id:3, ko:'쪽지시험 1',                en:'Quiz 1',                             way:'scan', due:'–',     sub:40, scored:40, rev:40, relN:0, miss2:true},   
     {id:4, ko:'쪽지시험 2',                en:'Quiz 2',                             way:'scan', due:'–',     sub:42, scored:0,  rev:0,  relN:0},   
     {id:5, ko:'중간고사',                  en:'Midterm',                            way:'scan', due:'–',     sub:42, scored:42, rev:30, relN:0},
     {id:6, ko:'과제 2 · 루브릭 개발',      en:'Essay 2 · Designing a rubric',       way:'file', due:'10.24', sub:41, scored:39, rev:12, relN:0},
@@ -167,7 +167,8 @@ function renderCourse(){
   const rows = [...evs].reverse().map(e=>{ const a = (taNoRel && nextAct(e)==='rel') ? 'view' : nextAct(e), scoring = e.running||0, pre = e.sub - e.scored - scoring;   
     const subCell = e.sub ? `${e.sub}/${c.n}${pre && e.scored ? `<span class="sub st muted">${d('subPre')(pre)}</span>` : ''}${scoring ? `<span class="sub st run">${d('subScoring')(scoring)}</span>` : ''}${e.unmatched ? `<span class="sub st run">${d('subUnm')(e.unmatched)}</span>` : ''}` : `<span class="st muted">${e.way==='file' ? d('waiting') : d('noSub')}</span>`;
     const relCell = !e.sub ? '<span class="st muted">–</span>' : e.relN===0 ? `<span class="st muted">${d('relNo')}</span>` : e.relN===e.sub ? `<span class="st ok">${e.relN}/${e.sub}</span>` : `${e.relN}/${e.sub}<span class="sub">${d('relPart')}</span>`;
-    const lbl = a==='match' ? d('act').match(e.unmatched) : d('act')[a];
+    const fl = typeof flowActLabel==='function' ? flowActLabel(e) : null;
+    const lbl = fl || (a==='match' ? d('act').match(e.unmatched) : d('act')[a]);
     const pri = ['upload','match','ai','rev','rel'].includes(a);
     return `<tr class="clickable" onclick="go('eval','${c.id}',${e.id})">
     <td class="l"><b>${evName(e)}</b></td>
@@ -200,6 +201,7 @@ function renderNew(){
     <div class="fl"><label>${d('nameLbl')}</label><input class="inp" id="nfName" placeholder="${d('namePh')}" value="${nf.name||''}" oninput="nf.name=this.value"></div>
     <div class="fl"><label>${d('wayLbl')}</label><div class="way-row">${wc('file','file-up',d('wayL').file,d('fileD'))}${wc('scan','scan-line',d('wayL').scan,d('scanD'))}</div></div>
     ${nf.way==='file' ? `<div class="fl" style="margin-bottom:0"><label>${d('dueLbl')}</label><input class="inp" type="date" value="2026-10-24" style="max-width:240px"></div>` : ''}
+    <div class="fl" style="margin:16px 0 0"><label>${lang==='ko'?'성적 반영 비율':'Weight in final grade'}</label><div style="display:flex;align-items:center;gap:8px"><input class="inp" type="number" min="0" max="100" value="${nf.weight??20}" style="max-width:120px" oninput="nf.weight=+this.value||0"><span>%</span></div><p class="hint" style="font-size:13px;color:#9ea3ad;margin:6px 0 0">${lang==='ko'?'총점을 이 비율로 환산해 리포트와 학생 피드백에 함께 보여요. 예: 27 / 30 → 18.0 / 20':'The total is converted to this weight in reports and student feedback. e.g. 27 / 30 → 18.0 / 20'}</p></div>
     </div>
   </div>
   <div class="box"><p class="box-t"><span class="n">2</span>${d('s2')}</p><p class="box-d">${d('s2d')}</p>
@@ -209,6 +211,7 @@ function renderNew(){
     </div>
   </div>
   <div class="box"><p class="box-t"><span class="n">3</span>${typeof qd==='function'?qd('s3'):d('s3')}</p><p class="box-d">${typeof qd==='function'?qd('s3d'):d('s3d')}</p>${typeof qsHtml==='function' ? qsHtml() : rub+gen}</div>
+  ${typeof preDecideBox==='function' ? preDecideBox() : ''}
   <div class="foot-act"><button class="btn-sec" onclick="go('course','${c.id}')">${d('cancel')}</button><button class="btn-solid" ${nf.rub?'':'disabled'} onclick="nfCreate()">${d('create')}</button></div>`;
 }
 const _renderNew = renderNew;
@@ -222,7 +225,7 @@ renderNew = function(){
   if (e && e.sub) h = h.replace(/onclick="nfSet\('way','(file|scan)'\)"/g, 'style="pointer-events:none;opacity:.6"');
   return h;
 };
-function nfSaveEdit(){ const e = evById(rosterId, nf.editId); const nm = (document.getElementById('nfName')||{}).value; if (nm){ e.ko = e.en = nm; } if (!e.sub) e.way = nf.way; const id = e.id; if (nf.qs) e.qs = nf.qs; Object.assign(nf,{type:'hw',way:'file',lec:[],q:null,gen:'idle',rub:null,qs:null,name:'',editId:null}); go('eval', rosterId, id); toast(d('saved')); }
+function nfSaveEdit(){ const e = evById(rosterId, nf.editId); const nm = (document.getElementById('nfName')||{}).value; if (nm){ e.ko = e.en = nm; } if (!e.sub) e.way = nf.way; const id = e.id; if (nf.qs) e.qs = nf.qs; e.weight = nf.weight ?? 20; if (nf.pre) e.pre = {...nf.pre}; nf.pre = null; nf.weight = undefined; Object.assign(nf,{type:'hw',way:'file',lec:[],q:null,gen:'idle',rub:null,qs:null,name:'',editId:null}); go('eval', rosterId, id); toast(d('saved')); }
 function nfSet(k,v){ nf[k]=v; nf.type = nf.way==='file'?'hw':'exam'; render(); }
 function nfAdd(kind){ if (kind==='lec') nf.lec.push(lang==='ko' ? `${nf.lec.length+3}주차_강의자료.pdf` : `week${nf.lec.length+3}_slides.pdf`); else nf.q = lang==='ko' ? '과제2_문제지.pdf' : 'essay2_questions.pdf'; render(); }
 function nfRm(kind,i){ if (kind==='lec') nf.lec.splice(i,1); else { nf.q=null; nf.rub=null; nf.qs=null; nf.gen='idle'; } render(); }
@@ -233,7 +236,8 @@ function nfCreate(){
   const evs = evOf(rosterId); const id = Math.max(...evs.map(e=>e.id))+1;
   evs.push({id, ko:name, en:name, type:nf.way==='file'?'hw':'exam', way:nf.way, due: nf.way==='file'?'10.24':'–', sub:0, scored:0, rev:0, relN:0});
   const c = cById(rosterId); c.ev.push([name,name,'none']);
-  evs[evs.length-1].qs = nf.qs; Object.assign(nf,{type:'hw',way:'file',lec:[],q:null,gen:'idle',rub:null,qs:null,name:''});
+  evs[evs.length-1].qs = nf.qs; evs[evs.length-1].weight = nf.weight ?? 20; evs[evs.length-1].pre = {...(nf.pre || {var:'ask', part:'yes', out:'ask', abs:'zero'})};   
+  nf.pre = null; nf.weight = undefined; Object.assign(nf,{type:'hw',way:'file',lec:[],q:null,gen:'idle',rub:null,qs:null,name:''});
   go('course', rosterId); toast(d('created')(name));
 }
 
@@ -248,10 +252,12 @@ function renderEval(){
   const scoringN = e.running||0, preN = list.filter(s=>stOf(s)==='pre').length, preAll = e.sub - e.scored - scoringN;
   const credit = (typeof CREDIT==='undefined' ? 100 : CREDIT);
   const tuneB = preAll > 0 && !scoringN && typeof td==='function' ? `<button class="act" ${credit<=0?'disabled':''} onclick="go('tune','${c.id}',${e.id})"><i data-lucide="flask-conical" style="width:16px;height:16px"></i>${td('entry')}</button>` : '';   
-  const aiB = preAll > 0 && !scoringN ? `${tuneB}<button class="act${a==='ai'?' pri':''}" ${credit<=0?'disabled':''} onclick="runAi()"><i data-lucide="sparkles" style="width:16px;height:16px"></i>${d('aiBtn')(preAll)}</button>` : '';
-  const actBtn = a==='ai' ? '' : a==='rel' ? `<button class="act pri" onclick="release()">${d('release')(e.rev - e.relN)}</button>`
+  
+  const band = typeof flowBanner==='function' ? flowBanner(c, e) : '';
+  const aiB = typeof flowAiBtns==='function' ? flowAiBtns(c, e, preAll, scoringN, credit, a) : preAll > 0 && !scoringN ? `${tuneB}<button class="act${a==='ai'?' pri':''}" ${credit<=0?'disabled':''} onclick="runAi()"><i data-lucide="sparkles" style="width:16px;height:16px"></i>${d('aiBtn')(preAll)}</button>` : '';
+  const actBtn = (e.flow && (e.flow!=='final' || (!e.fbDone && !e.fbSkip))) || a==='ai' ? '' :       a==='rel' ? `<button class="act pri" onclick="release()">${d('release')(e.rev - e.relN)}</button>`
     : a==='rev' ? `<button class="act pri" onclick="go('grade','${c.id}',${e.id},'${firstYet.sid}')">${d('revBtn')(e.sub - e.rev)}<i data-lucide="chevron-right" style="width:16px;height:16px"></i></button>` : '';
-  const scan = e.way==='scan' && e.sub && !upMore ? `<div class="up-bar"><i data-lucide="file-check-2"></i><b>${d('upDone')(e.sub)}</b><span class="muted">${d('upLast')}</span><button class="act" onclick="upMore=true; render()"><i data-lucide="upload" style="width:15px;height:15px"></i>${d('upMore')}</button></div>`
+  const scan = e.way==='scan' && e.sub && !upMore && band ? '' : e.way==='scan' && e.sub && !upMore ? `<div class="up-bar"><i data-lucide="file-check-2"></i><b>${d('upDone')(e.sub)}</b><span class="muted">${d('upLast')}</span><button class="act" onclick="upMore=true; render()"><i data-lucide="upload" style="width:15px;height:15px"></i>${d('upMore')}</button></div>`
     : e.way==='scan' ? `<div class="box"><p class="box-t"><i data-lucide="scan-line" style="width:20px;height:20px;color:#416bff"></i>${d('scanT')}</p><p class="box-d">${d('scanUpD')}</p>
       <div class="dz2">
         <div class="dz2-c" onclick="go('split','${c.id}',${e.id})"><span class="dz2-ic"><i data-lucide="file-stack"></i></span><b>${d('upClassT')}</b><p>${d('upClassD')}</p><small>${d('upClassS')}</small></div>
@@ -274,20 +280,20 @@ function renderEval(){
     return `<tr class="${s.at && st!=='scoring' && st!=='pre'?'clickable':''}" onclick="${s.at && st!=='scoring' && st!=='pre'?`go('grade','${c.id}',${e.id},'${s.sid}')`:''}">
     <td>${s.sid}</td><td>${nm}</td>
     <td>${s.at ? `${s.at}${s.late && e.way==='file' ? ` <span class="tag" style="height:20px;font-size:12px;color:#b45309;background:#fff4e5">${d('late')}</span>`:''}${s.byProf ? ` <span class="tag" style="height:20px;font-size:12px">${d('howProf')}</span>`:''}` : `<span class="st muted">${d('notSub')}</span>`}</td>
-    <td>${s.at && st!=='scoring' && st!=='pre' ? `<b>${s.score}</b><span class="st muted"> / 30</span>` : '<span class="st muted">–</span>'}</td>
+    <td>${s.at && st!=='scoring' && st!=='pre' ? (typeof scoreCell==='function' ? scoreCell(e, s) : `<b>${s.score}</b><span class="st muted"> / 30</span>`) : '<span class="st muted">–</span>'}</td>
     <td>${stTag(st)}</td>
     <td style="white-space:nowrap">${act}</td></tr>`; }).join('');
   return `<div class="ch"><div class="crumb"><a href="#" onclick="go('home');return false">${t('myCourses')}</a><i data-lucide="chevron-right" style="width:16px;height:16px"></i><a href="#" onclick="go('course','${c.id}');return false">${cName(c)}</a><i data-lucide="chevron-right" style="width:16px;height:16px"></i><span>${evName(e)}</span></div>
-    <div class="ch-row"><div><h1>${evName(e)}</h1><div class="ch-meta"><span class="chip${e.way==='file'?'':' blue'}">${d('wayL')[e.way]}</span>${e.way==='file' ? `<span>${d('thDue')} <b>${e.due}</b> · ${passed ? d('duePassed') : d('dueLeft')(daysLeft)}</span>` : ''}${qv.btn}<span class="ev-mng"><button class="act txt" onclick="editEval()"><i data-lucide="pencil"></i>${d('evEdit')}</button><button class="act txt del" onclick="delEval()"><i data-lucide="trash-2"></i>${d('evDel')}</button></span></div></div><div style="display:flex;gap:8px">${aiB}${actBtn}</div></div></div>
-  ${qv.panel}${scan}
+    <div class="ch-row"><div><h1>${evName(e)}</h1><div class="ch-meta"><span class="chip${e.way==='file'?'':' blue'}">${d('wayL')[e.way]}</span>${e.way==='file' ? `<span>${d('thDue')} <b>${e.due}</b> · ${passed ? d('duePassed') : d('dueLeft')(daysLeft)}</span>` : ''}${band && e.way==='scan' && e.sub && !upMore ? `<span class="muted">${d('upDone')(e.sub)}</span><button class="act txt" onclick="upMore=true; render()"><i data-lucide="upload"></i>${d('upMore')}</button>` : ''}${qv.btn}<span class="ev-mng"><button class="act txt" onclick="editEval()"><i data-lucide="pencil"></i>${d('evEdit')}</button><button class="act txt del" onclick="delEval()"><i data-lucide="trash-2"></i>${d('evDel')}</button></span></div></div><div style="display:flex;gap:8px">${aiB}${actBtn}</div></div></div>
+  ${qv.panel}${scan}${band}
   ${remindTo ? `<div class="box"><p class="box-t"><i data-lucide="bell" style="width:20px;height:20px;color:#416bff"></i>${d('remindT')}</p><p class="box-d">${d('remindVia')}</p>
     <div class="fl"><label>${d('remindTo')}</label><div style="display:flex;flex-wrap:wrap;gap:6px">${remindTo.map(id=>{ const x=list.find(y=>y.sid===id); return `<span class="chip">${x.sid} ${lang==='ko'?x.ko:x.en}</span>`; }).join('')}</div></div>
     <textarea class="fb-area" id="rmMsg">${d('remindMsg')(evName(e), e.due)}</textarea>
     <div class="foot-act" style="padding:12px 0 0"><button class="btn-sec" onclick="remindTo=null; render()">${d('cancel')}</button><button class="btn-solid" onclick="toast(d('reminded')(remindTo.length)); remindTo=null; render()">${d('send')}</button></div></div>` : ''}
-  <p class="sec-desc">${d('autoNote')}</p>
+  ${band ? '' : `<p class="sec-desc">${d('autoNote')}</p>`}
   ${preAll > 0 && credit<=0 ? `<p class="note"><i data-lucide="info"></i><span>${d('noCredit')}</span></p>` : ''}
   <div class="stats">${stat(d('stSub'), `${e.sub}<em>/ ${c.n}</em>${preAll && e.scored ? `<em style="margin-left:8px">${d('subPre')(preAll)}</em>` : ''}${scoringN ? `<em style="margin-left:8px;color:#3151c4">${d('subScoring')(scoringN)}</em>` : ''}`)}${stat(d('stRev'), e.sub ? `${e.rev}<em>/ ${e.sub}</em>` : '–', a==='rev')}${stat(d('stRel'), e.sub ? `${e.relN}<em>/ ${e.sub}</em>` : '–', a==='rel')}</div>
-  ${a==='rel' ? `<p class="note"><i data-lucide="info"></i><span>${d('releaseNote')}</span></p>` : passed && noSub.length ? `<p class="note"><i data-lucide="info"></i><span>${d('closedNote')}</span></p>` : ''}
+  ${band ? '' : a==='rel' ? `<p class="note"><i data-lucide="info"></i><span>${d('releaseNote')}</span></p>` : passed && noSub.length ? `<p class="note"><i data-lucide="info"></i><span>${d('closedNote')}</span></p>` : ''}
   ${e.sub ? `<div class="tbl-title"><b>${d('tblT')}</b><small>${d('tblD')(e.way)}</small></div><div class="tabs" style="margin:0 0 14px;align-items:center">${fil('all')}${fil('none')}${cnt.pre ? fil('pre') : ''}${fil('yet')}${fil('done')}<span style="margin-left:auto;display:inline-flex;gap:6px">${noSub.length && e.way==='file' && !passed ? `<button class="act" onclick="remindTo=subOf('${c.id}',${e.id}).filter(x=>!x.at).map(x=>x.sid); render()"><i data-lucide="bell" style="width:15px;height:15px"></i>${d('remindAll')(noSub.length)}</button>` : ''}<button class="act" ${credit<=0?'disabled title="'+d('noCredit')+'"':''} onclick="regrade()"><i data-lucide="refresh-cw" style="width:15px;height:15px"></i>${d('regrade')}</button><button class="act" onclick="dlEval()"><i data-lucide="download" style="width:15px;height:15px"></i>${d('excel')}</button></span></div>
   <div class="tbl-wrap"><table class="tbl"><thead><tr><th>${d('thSid')}</th><th>${d('thName')}</th><th>${d('thSubAt')}</th><th>${d('thScore')}</th><th>${d('thState')}</th><th></th></tr></thead><tbody>${rows}${shownAll.length > showN ? `<tr><td colspan="6"><button class="row-x" onclick="showN+=10; render()">${t('moreRows')(Math.min(10, shownAll.length-showN))}</button></td></tr>` : ''}</tbody></table></div>` : ''}`;
 }
@@ -316,7 +322,7 @@ function delEval(){
 }
 function editEval(){
   const e = evById(rosterId, evalId);
-  Object.assign(nf, {name: evName(e), way: e.way, type: e.type, lec: [lang==='ko'?'3주차_강의자료.pdf':'week3_slides.pdf'], q: lang==='ko'?'문제지.pdf':'questions.pdf', gen:'done', rub: d('rubric').map(r=>[...r]), qs: e.qs || (typeof qsSample==='function' ? qsSample() : null), editId: e.id});
+  Object.assign(nf, {name: evName(e), way: e.way, type: e.type, lec: [lang==='ko'?'3주차_강의자료.pdf':'week3_slides.pdf'], q: lang==='ko'?'문제지.pdf':'questions.pdf', gen:'done', rub: d('rubric').map(r=>[...r]), qs: e.qs || (typeof qsSample==='function' ? qsSample() : null), editId: e.id, weight: e.weight ?? 20, pre: e.pre ? {...e.pre} : null});
   go('new', rosterId);
 }
 
@@ -508,13 +514,15 @@ render = function(){
   const el = document.getElementById('v-detail');
   el.classList.toggle('on', DETAIL.includes(view));
   if (DETAIL.includes(view)){
-    el.innerHTML = view==='tune' ? renderTune() : view==='files' ? renderFiles() : view==='split' ? renderSplit() : view==='course' ? renderCourse() : view==='new' ? renderNew() : view==='eval' ? renderEval() : view==='newcourse' ? renderNewCourse() : view==='settings' ? renderSettings() : renderGrade();
+    el.innerHTML = view==='pgrade' ? renderPGrade() : view==='fbmake' ? renderFbMake() : view==='cross' ? renderCross() : view==='final' ? renderFinal() : view==='rules' ? renderRules() : view==='tune' ? renderTune() : view==='files' ? renderFiles() : view==='split' ? renderSplit() : view==='course' ? renderCourse() : view==='new' ? renderNew() : view==='eval' ? renderEval() : view==='newcourse' ? renderNewCourse() : view==='settings' ? renderSettings() : renderGrade();
   }
   if (view==='home' && !(typeof IS_TA!=='undefined' && IS_TA)){
     const k = {rev:0, rel:0, ai:0};
-    COURSES.filter(c=>c.sem==='s2' && !c.arch).forEach(c=>evOf(c.id).forEach(e=>{ const a = nextAct(e); if (k[a]!==undefined) k[a]++; }));
+    const fl = [];
+    COURSES.filter(c=>c.sem==='s2' && !c.arch).forEach(c=>evOf(c.id).forEach(e=>{ const f = typeof flowActLabel==='function' ? flowActLabel(e) : null; if (f){ fl.push([e, f]); return; } const a = nextAct(e); if (k[a]!==undefined) k[a]++; }));
     const gp = document.querySelector('#v-home [data-t="greetP"]');
-    if (gp) gp.textContent = lang==='ko' ? `확인할 평가 ${k.rev}개, 공개할 평가 ${k.rel}개, AI 채점할 평가 ${k.ai}개가 있어요.` : `${k.rev} assessments to review, ${k.rel} to release and ${k.ai} to AI-score.`;
+    if (gp) gp.textContent = (lang==='ko' ? `확인할 평가 ${k.rev}개, 공개할 평가 ${k.rel}개, AI 채점할 평가 ${k.ai}개가 있어요.` : `${k.rev} assessments to review, ${k.rel} to release and ${k.ai} to AI-score.`)
+      + fl.map(([e,f])=> lang==='ko' ? ` 「${evName(e)}」 ${f} 차례예요.` : ` ${evName(e)}: ${f}.`).join('');
   }
   if (view==='roster'){ document.getElementById('rHead').innerHTML = courseHead(cById(rosterId),'roster'); }
   document.querySelectorAll('#sbCourses .sc').forEach((n,i)=>{ const c = COURSES.filter(x=>x.sem==='s2' && !x.arch)[i]; if (!c) return; n.setAttribute('onclick', `go('course','${c.id}')`); n.classList.toggle('on', rosterId===c.id && view!=='home' && view!=='newcourse'); });

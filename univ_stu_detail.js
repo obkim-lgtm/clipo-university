@@ -14,6 +14,12 @@ const D = {
     
     fbH:'피드백', total:'총점', byCrit:'채점기준별', overall:'종합 피드백', myAns:'내 답안 보기', fbFrom:'담당 교수 확인',
     rubric:[['논제 이해',6,6,'문제가 묻는 "수행평가 설계의 타당성" 개념을 자기 말로 정확히 설명했어요.'],['근거의 타당성',9,7,'3주차 자료의 타당도 세 요소를 근거로 든 점은 좋아요. 두 번째 근거는 사례가 없어 주장만 남았어요.'],['논리 전개',9,8,'문제 제기 → 분석 → 개선안이 한 흐름으로 이어져요. 결론에서 개선안 셋을 다시 묶어 주면 더 선명해요.'],['문장·표현',6,6,'문장이 간결하고 용어를 바르게 썼어요.']],
+    
+    studyT:'다음 공부 안내', studyD:'점수가 깎인 곳의 모범답안과, 다음 글에서 해 볼 것을 정리했어요.', lostT:'감점된 곳과 모범답안', modelL:'모범답안', srcs:{1:'3주차 강의자료 · 18쪽', 2:'5주차 강의자료 · 7쪽'},
+    models:{1:'근거마다 수업 자료의 개념과 사례를 함께 써요. 예: 「구인 타당도가 낮다(3주차) → 과제가 요약만 요구해서 논증 능력을 재지 못한다(5주차 사례)」', 2:'주장 → 근거 → 개선안 순서로 쓰고, 결론에서 개선안 세 가지를 한 문장으로 다시 묶어요.'},
+    strongT:'잘한 점', strong:['논제 이해: 「수행평가 설계의 타당성」을 자기 말로 정확히 설명했어요.','문장·표현: 내용 타당도 · 구인 타당도 같은 용어를 바르게 썼어요.'],
+    improveT:'보완할 점', improve:[['근거의 타당성: 두 번째 근거에 사례가 없어요.','5주차 자료의 사례를 하나 붙여 보기'],['논리 전개: 결론이 개선안을 다시 묶지 않아요.','마지막 문단에서 개선안 셋을 한 문장으로 정리하기']],
+    planT:'다음 글을 위한 공부 방법', plan:[['근거는 「개념 + 사례」 한 쌍으로','주장마다 수업 자료의 개념 하나와 사례 하나를 짝지어 메모해 두기'],['타당도 세 요소를 표로','내용 · 구인 · 결과 타당도를 「뜻 · 확인 방법 · 예」 표로 정리하기'],['결론은 개선안을 다시 묶기','서술형 답의 마지막 문단을 「그래서 이것을 고친다」 한 문장으로 끝내는 연습']],
     overallFb:'논제를 정확히 짚었고 수업 자료를 근거로 끌어온 점이 설득력 있어요. 두 번째 근거에 5주차 자료의 사례를 하나 붙이면 글이 훨씬 단단해져요. 다음 과제에서 그 부분을 시도해 보세요.',
   },
   en:{
@@ -28,6 +34,11 @@ const D = {
     sent:'Assignment submitted', beforeDue:'You can resubmit until the due date', lateNote:'No submissions after the due date',
     fbH:'Feedback', total:'Total', byCrit:'By criterion', overall:'Overall feedback', myAns:'View my answer', fbFrom:'Reviewed by instructor',
     rubric:[['Understanding',6,6,'You explained "validity in assessment design" accurately in your own words.'],['Evidence',9,7,'Good use of the three validity elements from week 3. The second argument has no example, so it stays a claim.'],['Reasoning',9,8,'Problem → analysis → proposal flows well. Tie the three proposals together in the conclusion.'],['Expression',6,6,'Concise sentences and correct terminology.']],
+    studyT:'What to study next', studyD:'Model answers where you lost points, and what to try in your next essay.', lostT:'Where you lost points · model answer', modelL:'Model answer', srcs:{1:'week3 slides · p. 18', 2:'week5 slides · p. 7'},
+    models:{1:'Pair each argument with a concept and a case from class. e.g. "Construct validity is low (week 3) → the task only asks for a summary, so it cannot measure argument skills (week 5 case)."', 2:'Write claim → evidence → improvement, and close by tying the three improvements into one sentence.'},
+    strongT:'Strengths', strong:['Understanding: you explained "validity of an assessment design" accurately in your own words.','Writing: you used terms such as content and construct validity correctly.'],
+    improveT:'To improve', improve:[['Evidence: the second argument has no case.','Add one case from the week 5 material'],['Reasoning: the conclusion does not tie the improvements together.','Sum up the three improvements in one closing sentence']],
+    planT:'How to study for the next essay', plan:[['Evidence as "concept + case"','For each claim, note one concept and one case from class'],['Validity in a table','Put content, construct and consequential validity in a table: meaning · how to check · example'],['Close by tying it together','Practise ending with one sentence: "So this is what to change."']],
     overallFb:'You identified the question precisely and grounded it in course materials, which is convincing. Add one case from week 5 to the second argument and the essay becomes much stronger. Try that next time.',
   }
 };
@@ -96,7 +107,7 @@ function renderFeedback(){
   const rub = d('rubric').map((r,k)=>{ const g = k===0 || k===3 ? r[1] : k===1 ? Math.min(r[1], Math.ceil(rest/2)) : rest - Math.min(9, Math.ceil(rest/2)); return [r[0], r[1], g, r[3]]; });
   const got = rub.reduce((a,r)=>a+r[2],0), max = rub.reduce((a,r)=>a+r[1],0);
   return stuHead(c, L(e)) + `
-  <div class="score-hero"><div><div class="score-big">${got}<em>/ ${max}</em></div><div class="score-sub">${d('fbFrom')} · ${e.d}</div></div>
+  <div class="score-hero"><div><div class="score-big">${got}<em>/ ${max}</em></div><div class="score-sub">${d('fbFrom')} · ${e.d} · ${lang==='ko'?'성적 반영 20% · 환산':'20% of grade · converted'} <b>${(got/max*20).toFixed(1)} / 20</b></div></div>
     <div style="margin-left:auto"><button class="act${showAns?' pri':''}" onclick="showAns=!showAns; render()"><i data-lucide="file-text" style="width:16px;height:16px"></i>${showAns ? d('hideAns') : d('myAns')}</button></div></div>
   ${showAns ? `<div class="ans" style="margin-bottom:18px">
       <div class="vf-bar"><span class="vf-name">${lang==='ko'?'중간고사_'+T.ko.stuName+'.pdf':'midterm_'+T.en.stuName.split(' ')[0]+'.pdf'}</span>
@@ -107,6 +118,12 @@ function renderFeedback(){
     <div class="box"><p class="box-t">${d('byCrit')}</p><div style="margin-top:8px">
       ${rub.map(r=>`<div class="fb-item"><div class="fb-item-hd"><b>${r[0]}</b><span class="pts">${r[2]}<em> / ${r[1]}</em></span></div><p>${r[3]}</p></div>`).join('')}</div></div>
     <div class="box"><p class="box-t">${d('overall')}</p><p class="fb-total">${d('overallFb')}</p></div>
+  </div>
+  <div class="box study"><p class="box-t">${d('studyT')}</p><p class="box-d">${d('studyD')}</p>
+    ${rub.some(r=>r[2]<r[1]) ? `<p class="st-h">${d('lostT')}</p>${rub.map((r,k)=>r[2]<r[1] ? `<div class="st-lost"><div class="st-lost-hd"><b>${r[0]}</b><span class="pts">${r[2]}<em> / ${r[1]}</em></span></div><p><span class="st-tag">${d('modelL')}</span>${(d('models')||{})[k]||''}${(d('srcs')||{})[k] ? ` <span class="src-tag"><i data-lucide="book-open"></i>${d('srcs')[k]}</span>` : ''}</p></div>` : '').join('')}` : ''}
+    <div class="st-two"><div><p class="st-h">${d('strongT')}</p><ul class="st-list">${d('strong').map(x=>`<li>${x}</li>`).join('')}</ul></div>
+      <div><p class="st-h">${d('improveT')}</p><ul class="st-list">${d('improve').map(x=>`<li>${x[0]}<span class="st-next">→ ${x[1]}</span></li>`).join('')}</ul></div></div>
+    <p class="st-h">${d('planT')}</p><div class="st-plan">${d('plan').map((x,i)=>`<div><b><span class="st-n">${i+1}</span>${x[0]}</b><span>→ ${x[1]}</span></div>`).join('')}</div>
   </div>`;
 }
 

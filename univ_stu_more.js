@@ -62,7 +62,7 @@ function renderStuMe(){
   const row = (l, v) => `<div class="who-row"><span style="width:120px">${l}</span><b>${v}</b></div>`;
   return shead(sm('meH'), '') + `<div class="box"><div class="who" style="background:none;padding:0">${row(sm('meName'), t('stuName'))}${row(sm('meSid'), '202312345')}${row(sm('meDept'), t('stuDept'))}${row(sm('meMail'), 'kimseoyeon23@dd.ac.kr')}
     <div class="who-row"><span style="width:120px">${sm('mePw')}</span><button class="act" onclick="startVerify('reset')">${sm('mePwBtn')}</button></div>
-    <div class="who-row"><span style="width:120px">${sm('meLang')}</span><span style="display:flex;gap:6px"><button class="act${lang==='ko'?' pri':''}" onclick="setLang('ko')">한국어</button><button class="act${lang==='en'?' pri':''}" onclick="setLang('en')">English</button></span></div></div>
+    <div class="who-row"><span style="width:120px">${sm('meLang')}</span><span class="who-lang"><button class="act${lang==='ko'?' pri':''}" onclick="setLang('ko')">한국어</button><button class="act${lang==='en'?' pri':''}" onclick="setLang('en')">English</button></span></div></div>
     <p class="sec-desc" style="margin:14px 0 0">${sm('meNote')}</p></div>
   <div class="box"><p class="box-t">${sm('meConsent')}</p><p class="box-d" style="margin:0">${sm('meConsentD')}</p></div>`;
 }

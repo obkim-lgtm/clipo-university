@@ -238,8 +238,8 @@
     .footer-copy{ font-size:14px; color:#9aa0ad; }
   </style>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap">   
-  <link rel="stylesheet" href="univ_detail.css?v=26">   
-  <link rel="stylesheet" href="univ_theme.css?v=5">   
+  <link rel="stylesheet" href="univ_detail.css?v=48">   
+  <link rel="stylesheet" href="univ_theme.css?v=7">   
 </head>
 <body>
 
@@ -389,7 +389,7 @@ const T = {
     addT:'학번으로 추가', addD:'학번 전체를 넣어 주세요. 이름으로는 찾을 수 없어요. 추가된 학생은 학교 이메일로 로그인해요.', find:'찾기', add:'추가',
     excel:'엑셀로 한 번에 추가', sidNone:'이 학번의 학생이 없어요. 학번을 다시 확인해 주세요.', sidIn:'이미 수강생이에요', added:n=>`${n} 학생을 추가했어요`,
     listT:'수강생 목록', filterPh:'학번이나 이름으로 찾기', thSid:'학번', thName:'이름', thDept:'학과', thHow:'참여 방법', thLogin:'첫 로그인',
-    howCode:'강좌 코드', howProf:'교수가 추가', howExcel:'엑셀 등록', loginDone:'완료', loginYet:'아직', remove:'제외', removeAsk:n=>`${n} 학생을 이 강좌에서 제외할까요? 제출한 답안은 남아 있어요.`, moreRows:n=>`${n}명 더 보기`, removed:n=>`${n} 학생을 제외했어요`,
+    howCode:'강좌 코드', howProf:'교수님이 추가', howExcel:'엑셀 등록', loginDone:'완료', loginYet:'아직', remove:'제외', removeAsk:n=>`${n} 학생을 이 강좌에서 제외할까요? 제출한 답안은 남아 있어요.`, moreRows:n=>`${n}명 더 보기`, removed:n=>`${n} 학생을 제외했어요`,
     sems:{s2:'2026년 2학기', s1:'2026년 1학기'}, semCnt:n=>`강좌 ${n}개`,
   },
   en:{
@@ -568,9 +568,12 @@ function render(){
   const list = todoOpen ? TODO : TODO.slice(0,4);
   document.getElementById('todoCnt').textContent = TODO.length;
   document.getElementById('todoGrid').innerHTML = list.map(x=>{
-    const c = cById(x.c), [ev, st, fact] = L(x);
+    const c = cById(x.c); let [ev, st, fact] = L(x), goL = lang==='ko'?x.goKo:x.goEn;
+    
+    const fe = typeof evById==='function' ? evById(x.c, x.e) : null, fl = fe && typeof flowActLabel==='function' ? flowActLabel(fe) : null;
+    if (fl){ st = lang==='ko' ? '현장 채점' : 'Field grading'; fact = lang==='ko' ? `${fe.sub}명` : `${fe.sub} students`; goL = fl; }
     const sec = lang==='ko' ? c.secKo : c.secEn;
-    return `<div class="ti"><span class="dt"></span><div class="x"><b>${cName(c)} · ${sec}</b><small>${ev} · ${st} · ${fact}</small></div><button class="go" onclick="go('eval','${x.c}',${x.e})">${lang==='ko'?x.goKo:x.goEn}<i data-lucide="chevron-right" style="width:16px;height:16px"></i></button></div>`;
+    return `<div class="ti"><span class="dt"></span><div class="x"><b>${cName(c)} · ${sec}</b><small>${ev} · ${st} · ${fact}</small></div><button class="go" onclick="go('eval','${x.c}',${x.e})">${goL}<i data-lucide="chevron-right" style="width:16px;height:16px"></i></button></div>`;
   }).join('');
   const more = document.getElementById('todoMore');
   more.style.display = TODO.length>4 ? '' : 'none';
@@ -604,9 +607,11 @@ function render(){
 
 function cardTodo(c){
   if (typeof evOf !== 'function') return `<span>${t('evCount')(c.ev.length)}</span>`;
-  const evs = evOf(c.id), k = {rev:0, rel:0, ai:0}; evs.forEach(e=>{ const a = nextAct(e); if (k[a]!==undefined) k[a]++; });
-  const parts = [k.rev && t('ccRev')(k.rev), k.rel && t('ccRel')(k.rel), k.ai && t('ccAi')(k.ai)].filter(Boolean);
-  return parts.length ? parts.map(p=>`<b>${p}</b>`).join('<span class="sep">·</span>') : `<span class="muted">${t('evCount')(evs.length)} · ${t('ccNone')}</span>`;
+  
+  const flow = e => typeof flowActLabel==='function' ? flowActLabel(e) : null;
+  const evs = evOf(c.id), k = {rev:0, rel:0, ai:0}; evs.forEach(e=>{ if (flow(e)) return; const a = nextAct(e); if (k[a]!==undefined) k[a]++; });
+  const parts = [...evs.filter(flow).map(e=>`${evName(e)} · ${flow(e)}`), k.rev && t('ccRev')(k.rev), k.rel && t('ccRel')(k.rel), k.ai && t('ccAi')(k.ai)].filter(Boolean);
+  return `<span class="cc-todo-t">${parts.length ? parts.map(p=>`<b>${p}</b>`).join('<span class="sep">·</span>') : `<span class="muted">${t('evCount')(evs.length)} · ${t('ccNone')}</span>`}</span>`;   
 }
 function card(c){
   const done = c.ev.filter(e=>e[2]==='done').length, sec = lang==='ko'?c.secKo:c.secEn;
@@ -638,13 +643,22 @@ if (location.hash.includes("en")) lang = "en";
 render();
 if (location.hash.includes("collapsed")) toggleSb();
 </script>
-<script src="univ_prof_detail.js?v=41"></script>
+<script src="univ_prof_detail.js?v=51"></script>
 <script src="univ_questions.js?v=5"></script>   
 <script src="univ_files.js?v=1"></script>   
+<script src="univ_rules.js?v=5"></script>   
+<script src="univ_cross.js?v=3"></script>   
+<script src="univ_fbmake.js?v=3"></script>   
+<script src="univ_criteria.js?v=10"></script>   
+<script src="univ_source.js?v=2"></script>   
 
 <script src="univ_prof_more.js?v=11"></script>   
+<script src="univ_analysis.js?v=6"></script>   
+<script src="univ_mixed.js?v=10"></script>   
 <script src="univ_week.js?v=2"></script>   
-<script src="univ_ta.js?v=5"></script>   
-<script src="univ_nav.js?v=11"></script>   
+<script src="univ_pgrade.js?v=7"></script>   
+<script src="univ_ta.js?v=7"></script>   
+<script src="univ_flowcase.js?v=3"></script>   
+<script src="univ_nav.js?v=21"></script>   
 </body>
 </html>

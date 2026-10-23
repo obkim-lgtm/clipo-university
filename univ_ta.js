@@ -52,3 +52,14 @@ if (IS_TA){
 }
 
 if (!IS_TA) render();   
+
+
+if (IS_TA){
+  const _fbTA = flowBanner;
+  flowBanner = function(c, e){
+    if (!e.flow || e.flow==='ready' || (e.flow==='final' && e.fbDone)) return _fbTA(c, e);
+    const step = typeof flowActLabel==='function' ? flowActLabel(e) : null; if (!step) return _fbTA(c, e);
+    const txt = lang==='ko' ? `지금은 교수님이 「${step}」 단계를 하고 있어요. ${e.flow==='final' ? '끝나면 학생 피드백을 함께 볼 수 있어요.' : '끝나면 확정된 점수로 확인할 수 있어요.'}` : `The instructor is at the "${step}" step. You can review once scores are confirmed.`;
+    return `<div class="fl-band"><span class="fl-band-ic"><i data-lucide="user-check"></i></span><p>${txt}</p><span class="fl-band-b"></span></div>`;
+  };
+}

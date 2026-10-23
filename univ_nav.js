@@ -2,7 +2,7 @@
 (function () {
   var S = 'univ_student_v1_261019.html', P = 'univ_home_v1_261019.html', G = 'univ_grade_v1_261021.html';
   
-  var LOGIN = ['로그인 (셋이 같이 쓰는 화면)', [
+  var LOGIN = ['공통', [   
     [S + '#login', '로그인'],
     [S + '#verify', '처음 로그인 · 학교 이메일 인증'],
     [S + '#consent', '처음 로그인 · 정보 확인·동의 (학생만)'],
@@ -44,7 +44,7 @@
         [P + '#eval-c1-7', '평가 상세 · 공개 전 (확인 끝)'],
         [P + '#eval-c1-5', '평가 상세 · 확인 중'],
         [P + '#eval-c1-6', '평가 상세 · 새로 낸 학생 채점 전'],
-        [P + '#eval-c1-4', '평가 상세 · AI 채점 전'],
+        [P + '#eval-c1-4', '평가 상세 · AI 채점 전 (3명 먼저 채점)'],
         [P + '#eval-c1-3', '평가 상세 · 직접 올림 (2명 미제출)'],
         [P + '#eval-c1-8', '평가 상세 · 학생 제출 기다리는 중'],
         [P + '#eval-c1-9', '평가 상세 · 답안 올리기 전'],
@@ -52,6 +52,26 @@
         [P + '#files-c1-9', '학생별 파일 올리기 · 처음'],
         [P + '#files-c1-3', '학생별 파일 올리기 · 더 올릴 때'],
         [G + '?id=202312001&course=c1&ev=5', '학생별 채점 (채점 가이드)']
+      ]],
+      
+      ['현장 채점 순서 · 쪽지시험 2', [
+        [P + '#new-c1', '① 평가 만들기 · 채점 전 결정 · 기준 잘 쓰는 법'],
+        [P + '#eval-c1-4', '② 3명 먼저 채점 (채점 전)'],
+        [P + '?flow=pilot#eval-c1-4', '③ 시범 채점 끝 · 판정이 갈린 답 4개'],
+        [P + '#rules-c1-4', '③ 채점 규칙 정하기 (판정 → 기준 문장)'],
+        [P + '?flow=ready#eval-c1-4', '④ 규칙 정함 · 나머지 39명 채점할까요?'],
+        [P + '?flow=more#eval-c1-4', '⑤ 새로 갈린 답 2개 · 앞 학생에도 맞추기'],
+        [P + '?flow=done#eval-c1-4', '⑥ 교수님 채점 차례'],
+        [P + '?flow=done#pgrade-c1-4', '⑥ 교수님 채점 · AI 점수 가리고 한 명씩'],
+        [P + '?flow=done#pgrade-c1-4-sheet', '⑥ 교수님 채점 · 평가표(엑셀)로 올리기'],
+        [P + '?flow=cross#cross-c1-4', '⑥ 교차 검토 · 기준 고치기 (고치기 전)'],
+        [P + '?flow=confirm#cross-c1-4', '⑥ 교차 검토 · 다시 채점 뒤 (일치 전 → 후)'],
+        [P + '?flow=confirm#final-c1-4', '⑦ 점수 확정 · 채점 확정 기준'],
+        [P + '?flow=final#fb-c1-4', '⑧ 피드백 만들기 · 한 명 먼저 보기'],
+        [P + '?flow=fb#eval-c1-4', '⑧ 피드백 만듦 · 공개 전'],
+        [P + '?flow=rel#eval-c1-4', '⑧ 공개 끝'],
+        [P + '?flow=rel&ev=4#reports-c1', '⑨ 리포트 · 문항 분석 (쪽지시험 2)'],
+        [P + '?ev=3#reports-c1', '⑨ 리포트 · 소문항 정답률 (쪽지시험 1: 빈칸 · O/X · 고르기 · 서술)']
       ]],
       ['그 밖', [
         [P + '#guide', '사용 안내'],
@@ -89,6 +109,8 @@
     var q = new URLSearchParams(location.search), keep = [];
     if (q.get('role')) keep.push('role=' + q.get('role'));
     if (q.get('rel')) keep.push('rel=' + q.get('rel'));
+    if (q.get('flow')) keep.push('flow=' + q.get('flow'));
+    if (q.get('ev')) keep.push('ev=' + q.get('ev'));
     return { f: f, q: keep.length ? '?' + keep.join('&') : '', h: location.hash };
   }
   function curKey() {
