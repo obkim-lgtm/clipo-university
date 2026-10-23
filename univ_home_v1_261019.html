@@ -238,7 +238,7 @@
     .footer-copy{ font-size:14px; color:#9aa0ad; }
   </style>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap">   
-  <link rel="stylesheet" href="univ_detail.css?v=48">   
+  <link rel="stylesheet" href="univ_detail.css?v=49">   
   <link rel="stylesheet" href="univ_theme.css?v=7">   
 </head>
 <body>
@@ -384,7 +384,7 @@ const T = {
     evalSummary:(d,t)=>`평가 ${t}개 중 <b>${d}개</b> 공개 완료`, evCount:n=>`평가 ${n}개`, ccRev:n=>`확인할 평가 ${n}`, ccRel:n=>`공개할 평가 ${n}`, ccAi:n=>`AI 채점할 평가 ${n}`, ccNone:'지금 할 일 없음',
     notReady:'시안에서는 아직 열리지 않아요',
     nav:{home:'홈', courses:'강좌', reports:'리포트', guide:'사용 안내', support:'고객센터'},
-    rosterEmpty:'아직 수강생이 없어요. 위의 강좌 코드를 첫 수업에 알려 주거나 학번으로 추가해 주세요.', rosterLink:'수강생', rosterH:'수강생', rosterSub:'학생에게 강좌 코드를 알려 주면 직접 참여하고, 학번을 알면 바로 추가할 수 있어요.',
+    rosterEmpty:'아직 수강생이 없어요. 위의 강좌 코드를 첫 수업에 알려 주거나 학번으로 추가해 주세요.', rosterLink:'수강생', rosterH:'수강생', rosterSub:'수강생으로 등록된 학생만 과제를 내고 피드백을 받아요. 강좌 코드를 알려 주면 학생이 직접 들어오고, 학번을 알면 바로 추가할 수 있어요.',
     codeT:'강좌 코드로 참여', codeD:'첫 수업에 이 코드를 알려 주세요. 학생이 로그인한 뒤 코드를 넣으면 이 강좌에 들어와요.', copy:'복사', copied:'강좌 코드를 복사했어요', codeNew:'코드 새로 만들기',
     addT:'학번으로 추가', addD:'학번 전체를 넣어 주세요. 이름으로는 찾을 수 없어요. 추가된 학생은 학교 이메일로 로그인해요.', find:'찾기', add:'추가',
     excel:'엑셀로 한 번에 추가', sidNone:'이 학번의 학생이 없어요. 학번을 다시 확인해 주세요.', sidIn:'이미 수강생이에요', added:n=>`${n} 학생을 추가했어요`,
@@ -406,7 +406,7 @@ const T = {
     evalSummary:(d,t)=>`<b>${d}</b> of ${t} assessments released`, evCount:n=>`${n} assessments`, ccRev:n=>`${n} to review`, ccRel:n=>`${n} to release`, ccAi:n=>`${n} to AI-score`, ccNone:'nothing to do now',
     notReady:'Not available in this mockup yet',
     nav:{home:'Home', courses:'Courses', reports:'Reports', guide:'User guide', support:'Help center'},
-    rosterEmpty:'No students yet. Share the course code above in class, or add students by ID.', rosterLink:'Students', rosterH:'Students', rosterSub:'Share the course code so students can join, or add them directly by student ID.',
+    rosterEmpty:'No students yet. Share the course code above in class, or add students by ID.', rosterLink:'Students', rosterH:'Students', rosterSub:'Only enrolled students can submit and receive feedback. Share the course code so students join themselves, or add them directly by student ID.',
     codeT:'Join with course code', codeD:'Share this code in your first class. Students enter it after signing in to join this course.', copy:'Copy', copied:'Course code copied', codeNew:'Generate a new code',
     addT:'Add by student ID', addD:'Enter the full student ID. Names cannot be searched. Once added, the student signs in with their school email.', find:'Find', add:'Add',
     excel:'Add many with Excel', sidNone:'No student with this ID. Please check it again.', sidIn:'Already enrolled', added:n=>`Added ${n}`,
@@ -643,20 +643,20 @@ if (location.hash.includes("en")) lang = "en";
 render();
 if (location.hash.includes("collapsed")) toggleSb();
 </script>
-<script src="univ_prof_detail.js?v=51"></script>
-<script src="univ_questions.js?v=5"></script>   
-<script src="univ_files.js?v=1"></script>   
-<script src="univ_rules.js?v=5"></script>   
-<script src="univ_cross.js?v=3"></script>   
-<script src="univ_fbmake.js?v=3"></script>   
-<script src="univ_criteria.js?v=10"></script>   
+<script src="univ_prof_detail.js?v=52"></script>
+<script src="univ_questions.js?v=6"></script>   
+<script src="univ_files.js?v=2"></script>   
+<script src="univ_rules.js?v=7"></script>   
+<script src="univ_cross.js?v=4"></script>   
+<script src="univ_fbmake.js?v=4"></script>   
+<script src="univ_criteria.js?v=12"></script>   
 <script src="univ_source.js?v=2"></script>   
 
-<script src="univ_prof_more.js?v=11"></script>   
-<script src="univ_analysis.js?v=6"></script>   
+<script src="univ_prof_more.js?v=12"></script>   
+<script src="univ_analysis.js?v=8"></script>   
 <script src="univ_mixed.js?v=10"></script>   
 <script src="univ_week.js?v=2"></script>   
-<script src="univ_pgrade.js?v=7"></script>   
+<script src="univ_pgrade.js?v=9"></script>   
 <script src="univ_ta.js?v=7"></script>   
 <script src="univ_flowcase.js?v=3"></script>   
 <script src="univ_nav.js?v=21"></script>   

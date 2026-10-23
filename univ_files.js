@@ -1,6 +1,6 @@
 
 const FD = {
-  ko:{ h:'학생별 파일 올리기', sub:'학생마다 따로 스캔한 파일을 한 번에 올려요. 파일 이름에 있는 학번으로 학생을 찾아 연결해요.',
+  ko:{ h:'학생별 파일 올리기', sub:'학생마다 스캔한 파일을 한 번에 올리면 한 명씩 연결하지 않아도 돼요. 파일 이름의 학번으로 학생을 찾아 연결해요.',
     dropT:'파일을 끌어다 놓거나 눌러서 골라요', dropD:'PDF·이미지 여러 개 · 파일 이름에 학번을 넣으면 자동으로 연결돼요 (예: 202312001_강하늘.pdf)',
     procT:n=>`파일 ${n}개를 읽는 중이에요`, procD:'파일 이름에서 학번을 찾고 있어요',
     sumD:n=>`파일 ${n}개를 올렸어요`, warn:'확인 필요', ok:'자동 연결됨', none:'파일이 없는 학생',
@@ -11,7 +11,7 @@ const FD = {
     reset:'다시 고르기', go:n=>`${n}명 답안 올리기`, ask:(k,n)=>`확인이 필요한 파일 ${k}개를 빼고 ${n}명 답안을 올릴까요?`,
     resetAsk:'고른 파일과 연결한 내용이 모두 사라져요. 처음부터 다시 고를까요?', leaveAsk:'올리지 않고 나가면 고른 파일이 사라져요. 나갈까요?',
     done:n=>`${n}명 답안을 올렸어요`, back:'평가로 돌아가기' },
-  en:{ h:'Upload files per student', sub:'Upload each student\'s scanned file at once. We match students by the student ID in the file name.',
+  en:{ h:'Upload files per student', sub:'Upload every student\'s scan at once instead of linking them one by one. Students are matched by the student ID in the file name.',
     dropT:'Drag files here or click to choose', dropD:'Several PDFs or images · put the student ID in the file name to link automatically (e.g. 202312001_Kang.pdf)',
     procT:n=>`Reading ${n} files`, procD:'Looking for student IDs in file names',
     sumD:n=>`${n} files uploaded`, warn:'Needs a check', ok:'Linked automatically', none:'Students with no file',

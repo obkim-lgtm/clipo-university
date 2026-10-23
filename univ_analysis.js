@@ -1,15 +1,15 @@
 
 const QA = {
-  ko:{ t:'문항 분석', d:(tot,w)=>`확인한 점수로 문항마다 얼마나 맞혔고, 잘하는 학생과 어려워하는 학생을 얼마나 가려냈는지 봐요. 만점 ${tot}점 · 성적 반영 ${w}%.`,
+  ko:{ t:'문항 분석', d:(tot,w)=>`어떤 문항이 실력을 잘 가려냈는지 알면 다음 시험 문항을 더 잘 고를 수 있어요. 교수님이 확인한 점수로 계산해요. 만점 ${tot}점 · 성적 반영 ${w}%.`,
     th:['문항','배점','득점률','만점','0점','변별도',''], ppl:n=>`${n}명`, v:{good:'잘 갈림', mid:'보통', low:'다시 볼 문항'},
     dHelp:'변별도 = 점수 위 27% 학생과 아래 27% 학생의 득점률 차이. 클수록 잘하는 학생과 어려워하는 학생을 잘 가려낸 문항이에요.',
-    items:'항목별 득점률', memoT:'다음 출제에 남길 메모', memoD:'문항 분석을 보고 다음 시험을 만들 때 참고할 것을 적어 둬요.', save:'메모 저장', saved:'출제 메모를 저장했어요',
+    items:'항목별 득점률', memoT:'다음 출제에 남길 메모', memoD:'잘 갈린 문항 유형은 살리고 안 갈린 유형은 바꾸면 다음 시험이 실력을 더 잘 가려내요. 숫자는 미리 채워 두었으니 고쳐서 저장하세요.', save:'메모 저장', saved:'출제 메모를 저장했어요',
     memo:(rows)=>rows.map(r=> r.v==='low' ? `문항 ${r.k}: 득점률 ${r.rate}% · 만점 ${r.full}명 · 변별도 ${r.D} → 잘하는 학생과 어려워하는 학생이 갈리지 않았어요. 다음엔 적용이나 판단을 묻는 형태로 바꿔 보기` : r.v==='good' ? `문항 ${r.k}: 변별도 ${r.D} · 잘 갈렸어요 → 같은 형식(사례 주고 판단 · 근거 쓰기) 유지` : `문항 ${r.k}: 변별도 ${r.D} → 채점 항목 중 득점률이 낮은 항목을 다시 보기`).join('\n'),
     conv:(avg,w)=>`환산 평균 ${avg} / ${w}` },
-  en:{ t:'Item analysis', d:(tot,w)=>`From reviewed scores: how well each question was answered and how well it separated stronger from weaker students. Max ${tot} · weighs ${w}% of the grade.`,
+  en:{ t:'Item analysis', d:(tot,w)=>`Knowing which questions separated stronger from weaker students helps you pick better questions next time. Calculated from scores you reviewed. Max ${tot} · weighs ${w}% of the grade.`,
     th:['Question','Points','Score rate','Full','Zero','Discrimination',''], ppl:n=>`${n}`, v:{good:'Separates well', mid:'Fair', low:'Revisit'},
     dHelp:'Discrimination = score-rate gap between the top 27% and bottom 27% of students. Higher means the question separates them better.',
-    items:'Rate by item', memoT:'Notes for the next exam', memoD:'Note what to keep or change when you write the next exam.', save:'Save notes', saved:'Notes saved',
+    items:'Rate by item', memoT:'Notes for the next exam', memoD:'Keep the question types that separated students and change the ones that did not, and your next exam measures better. Numbers are pre-filled; edit and save.', save:'Save notes', saved:'Notes saved',
     memo:(rows)=>rows.map(r=> r.v==='low' ? `Q${r.k}: rate ${r.rate}% · ${r.full} full marks · D ${r.D} → did not separate students. Try asking for application or judgment next time` : r.v==='good' ? `Q${r.k}: D ${r.D}, separates well → keep this format` : `Q${r.k}: D ${r.D} → look again at the lowest-rate items`).join('\n'),
     conv:(avg,w)=>`Converted avg ${avg} / ${w}` }
 };

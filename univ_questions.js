@@ -1,6 +1,6 @@
 
 const QD = {
-  ko:{ s3:'문항과 채점 방법', s3d:'문제지에서 찾은 문항이에요. 문항마다 배점과 모범답안, 채점 방법을 정해요.',
+  ko:{ s3:'문항과 채점 방법', s3d:'문항마다 배점과 모범답안, 채점 방법을 정해 두면 AI가 그 기준대로 채점해요. 문제지에서 찾은 문항이라 빠진 문항만 더하면 돼요.',
     genBtn:'AI로 문항·채점 항목 만들기', genNeed:'문제지를 올리면 만들 수 있어요', genRun:'문제지에서 문항을 찾고 채점 항목을 만드는 중이에요', genDone:(n,p)=>`문항 ${n}개를 찾고 채점 항목을 만들었어요. 배점 합계 ${p}점이에요.`,
     qNo:n=>`문항 ${n}`, pts:'배점', ptsU:'점', qText:'문항', model:'모범답안', modelPh:'정답이나 잘 쓴 답안을 붙여 넣어요. AI가 채점할 때 함께 봐요.', modelOpt:'(선택)',
     how:'채점 방법', mWhole:'한 번에', mWholeD:'모범답안과 비교해 문항 전체에 점수를 줘요. 답이 정해진 문제에 맞아요.', wDesc:'부분 점수 기준', wPh:'예) 풀이 과정이 맞고 계산만 틀리면 절반. 답만 쓰고 풀이가 없으면 0점.', wNote:'모범답안과 같으면 만점이에요. 부분 점수를 줄 경우가 있으면 적어요.', mItems:'항목으로 나눠', mItemsD:'채점 포인트마다 최고점을 정해요. 여러 요소를 써야 하는 서술형에 맞아요.', mRubric:'수준표', mRubricD:'기준마다 상·중·하 수준으로 점수를 줘요. 논술형에 맞아요.',
@@ -10,7 +10,7 @@ const QD = {
     review:'채점기준 AI 검토', reviewing:'검토하는 중이에요', addQ:'문항 추가', delQ:'문항 삭제',
     rvGrade:{good:'우수', ok:'적절', fix:'보완 필요'}, rvAmb:n=>`「${n}」 기준은 상·중·하를 「충분히·대체로·다소」 같은 정도로만 가르고 있어요. 무엇이 있으면 상인지 적으면 채점이 흔들리지 않아요.`, rvFine:'기준마다 무엇을 보는지 하나씩 분명해요. 이대로 채점해도 돼요.',
     viewBtn:'문항·채점 기준', viewClose:'접기', noGuide:'채점 가이드 없음', noModel:'모범답안 없음' },
-  en:{ s3:'Questions & scoring', s3d:'Questions found in the sheet. Set points, a model answer and how to score each one.',
+  en:{ s3:'Questions & scoring', s3d:'Set points, a model answer and a scoring method for each question, and AI scores by them. These come from your sheet, so just add any that are missing.',
     genBtn:'Find questions & draft scoring with AI', genNeed:'Upload the question sheet first', genRun:'Finding questions and drafting scoring items', genDone:(n,p)=>`Found ${n} questions and drafted scoring items. ${p} points in total.`,
     qNo:n=>`Question ${n}`, pts:'Points', ptsU:'pts', qText:'Question', model:'Model answer', modelPh:'Paste the correct or exemplary answer. AI uses it when scoring.', modelOpt:'(optional)',
     how:'Scoring method', mWhole:'As a whole', mWholeD:'Score the whole question against the model answer. Good when there is a set answer.', wDesc:'Partial credit', wPh:'e.g. Right method but a calculation slip: half. Answer only, no working: 0.', wNote:'Matching the model answer earns full points. Add partial-credit rules if any.', mItems:'Split into items', mItemsD:'Set a max for each scoring point. Good for answers that need several elements.', mRubric:'Rubric', mRubricD:'Score each criterion by level (high · mid · low). Good for essays.',

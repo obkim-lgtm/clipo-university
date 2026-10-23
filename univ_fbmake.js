@@ -2,7 +2,7 @@
 const FM = {
   ko:{ bnMake:'점수를 확정했어요. 학생에게 보낼 피드백을 만들어요. 한 명을 먼저 보고 형식을 정한 뒤 전원을 만들어요.', bnMakeGo:'피드백 만들기',
     bnMade:n=>`피드백 ${n}명분을 만들었어요. 공개하면 학생에게 점수와 피드백이 보여요.`, bnMadeGo:'피드백 보기',
-    h:'피드백 만들기', sub:'한 명을 먼저 보고 형식을 정한 뒤, 같은 형식으로 전원의 피드백을 만들어요. 만든 뒤에도 학생별 채점에서 고칠 수 있어요.',
+    h:'피드백 만들기', sub:'한 명을 먼저 보고 형식을 정하면, 모든 학생이 같은 짜임으로 점수 이유와 다음 공부 방법을 받아요. 만든 뒤에도 학생별 채점에서 고칠 수 있어요.',
     incT:'넣을 것', inc:[['crit','이번 점수 설명','문항 · 채점 기준별 점수와 설명'],['overall','종합 의견',''],['model','감점된 곳의 모범답안','감점 사유 대신 정답을 보여 줘요'],['strong','잘한 점 · 보완할 점','보완할 점마다 다음에 해 볼 한 줄'],['plan','공부 방법','아래 목표에 맞춰 써요']],
     goalL:'학생들의 다음 목표', goalPh:'예) 교원 임용 시험 대비', goalD:'공부 방법을 이 목표에 맞춰 써요.', notT:'넣지 않는 것', not:'반 평균 · 순위 · 「AI」 같은 채점 과정 말',
     who:'미리 볼 학생', prevT:'미리 보기', pg:'A4 2쪽 · 학생 화면에도 같은 내용',
@@ -17,7 +17,7 @@ const FM = {
     plan:[['타당도 세 요소를 표로','「이름 · 뜻 · 확인 방법 · 예」 네 칸으로 정리하기'],['근거는 「개념 + 사례」','주장마다 수업 자료의 개념과 사례를 한 쌍으로 메모하기'],['기출 형태로 연습','사례를 주고 문제점 · 개선안을 쓰는 형태를 시간 재고 써 보기']] },
   en:{ bnMake:'Scores confirmed. Make the feedback for students: preview one, set the format, then make it for everyone.', bnMakeGo:'Make feedback',
     bnMade:n=>`Feedback made for ${n}. Release to show scores and feedback to students.`, bnMadeGo:'View feedback',
-    h:'Make feedback', sub:'Preview one student, set the format, then make everyone\'s feedback the same way. You can still edit each one in student grading.',
+    h:'Make feedback', sub:'Set the format on one student and everyone gets the reasons for their score and how to study next in the same shape. You can still edit each one in student grading.',
     incT:'Include', inc:[['crit','This score explained','Points and notes per question and criterion'],['overall','Overall comment',''],['model','Model answers where points were lost','Shows the correct answer instead of the deduction reason'],['strong','Strengths · to improve','A next step for each point to improve'],['plan','How to study','Written for the goal below']],
     goalL:'Students\' next goal', goalPh:'e.g. Teacher certification exam', goalD:'Study tips are written for this goal.', notT:'Never included', not:'Class average · rank · process words such as "AI"',
     who:'Preview student', prevT:'Preview', pg:'2 A4 pages · same content on the student screen',

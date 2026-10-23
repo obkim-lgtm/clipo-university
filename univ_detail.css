@@ -486,7 +486,7 @@ body.sb-collapsed .spx{ left:68px; }
 .fm-chk{ display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-top:1px solid #f1f3f5; cursor:pointer; } .fm-chk:first-of-type{ border-top:none; }
 .fm-chk input{ accent-color:#416bff; width:18px; height:18px; margin:2px 0 0; } .fm-chk b{ display:block; font-size:15px; } .fm-chk small{ display:block; font-size:13px; color:#6d7381; margin-top:2px; }
 .fm-not{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:#f6f7f9; font-size:13px; color:#6d7381; } .fm-not b{ color:#3b3f4c; margin-right:4px; }
-.fm-prev-h{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; } .fm-prev-h b{ font-size:16px; }
+.fm-prev-h{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; } .fm-prev-h b{ font-size:16px; }
 .fm-page{ background:#fff; border:1px solid #e3e6ec; border-radius:6px; box-shadow:0 6px 24px rgba(17,24,39,.08); padding:28px 32px; }
 .fm-top{ display:flex; justify-content:space-between; font-size:13px; color:#6d7381; padding-bottom:10px; border-bottom:2px solid #17244d; margin-bottom:14px; }
 .fm-score{ display:flex; gap:28px; margin-bottom:6px; } .fm-score small{ display:block; font-size:12px; color:#6d7381; } .fm-score b{ font-size:28px; color:#17244d; } .fm-score em{ font-style:normal; font-size:14px; color:#9ea3ad; font-weight:400; }

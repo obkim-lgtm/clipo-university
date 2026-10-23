@@ -15,7 +15,7 @@ const D = {
     fbH:'피드백', total:'총점', byCrit:'채점기준별', overall:'종합 피드백', myAns:'내 답안 보기', fbFrom:'담당 교수 확인',
     rubric:[['논제 이해',6,6,'문제가 묻는 "수행평가 설계의 타당성" 개념을 자기 말로 정확히 설명했어요.'],['근거의 타당성',9,7,'3주차 자료의 타당도 세 요소를 근거로 든 점은 좋아요. 두 번째 근거는 사례가 없어 주장만 남았어요.'],['논리 전개',9,8,'문제 제기 → 분석 → 개선안이 한 흐름으로 이어져요. 결론에서 개선안 셋을 다시 묶어 주면 더 선명해요.'],['문장·표현',6,6,'문장이 간결하고 용어를 바르게 썼어요.']],
     
-    studyT:'다음 공부 안내', studyD:'점수가 깎인 곳의 모범답안과, 다음 글에서 해 볼 것을 정리했어요.', lostT:'감점된 곳과 모범답안', modelL:'모범답안', srcs:{1:'3주차 강의자료 · 18쪽', 2:'5주차 강의자료 · 7쪽'},
+    studyT:'다음 공부 안내', studyD:'다음 글에서 점수를 올릴 수 있게, 깎인 곳의 모범답안과 해 볼 것을 정리했어요.', lostT:'감점된 곳과 모범답안', modelL:'모범답안', srcs:{1:'3주차 강의자료 · 18쪽', 2:'5주차 강의자료 · 7쪽'},
     models:{1:'근거마다 수업 자료의 개념과 사례를 함께 써요. 예: 「구인 타당도가 낮다(3주차) → 과제가 요약만 요구해서 논증 능력을 재지 못한다(5주차 사례)」', 2:'주장 → 근거 → 개선안 순서로 쓰고, 결론에서 개선안 세 가지를 한 문장으로 다시 묶어요.'},
     strongT:'잘한 점', strong:['논제 이해: 「수행평가 설계의 타당성」을 자기 말로 정확히 설명했어요.','문장·표현: 내용 타당도 · 구인 타당도 같은 용어를 바르게 썼어요.'],
     improveT:'보완할 점', improve:[['근거의 타당성: 두 번째 근거에 사례가 없어요.','5주차 자료의 사례를 하나 붙여 보기'],['논리 전개: 결론이 개선안을 다시 묶지 않아요.','마지막 문단에서 개선안 셋을 한 문장으로 정리하기']],
@@ -34,7 +34,7 @@ const D = {
     sent:'Assignment submitted', beforeDue:'You can resubmit until the due date', lateNote:'No submissions after the due date',
     fbH:'Feedback', total:'Total', byCrit:'By criterion', overall:'Overall feedback', myAns:'View my answer', fbFrom:'Reviewed by instructor',
     rubric:[['Understanding',6,6,'You explained "validity in assessment design" accurately in your own words.'],['Evidence',9,7,'Good use of the three validity elements from week 3. The second argument has no example, so it stays a claim.'],['Reasoning',9,8,'Problem → analysis → proposal flows well. Tie the three proposals together in the conclusion.'],['Expression',6,6,'Concise sentences and correct terminology.']],
-    studyT:'What to study next', studyD:'Model answers where you lost points, and what to try in your next essay.', lostT:'Where you lost points · model answer', modelL:'Model answer', srcs:{1:'week3 slides · p. 18', 2:'week5 slides · p. 7'},
+    studyT:'What to study next', studyD:'To raise your score next time: model answers where you lost points, and what to try in your next essay.', lostT:'Where you lost points · model answer', modelL:'Model answer', srcs:{1:'week3 slides · p. 18', 2:'week5 slides · p. 7'},
     models:{1:'Pair each argument with a concept and a case from class. e.g. "Construct validity is low (week 3) → the task only asks for a summary, so it cannot measure argument skills (week 5 case)."', 2:'Write claim → evidence → improvement, and close by tying the three improvements into one sentence.'},
     strongT:'Strengths', strong:['Understanding: you explained "validity of an assessment design" accurately in your own words.','Writing: you used terms such as content and construct validity correctly.'],
     improveT:'To improve', improve:[['Evidence: the second argument has no case.','Add one case from the week 5 material'],['Reasoning: the conclusion does not tie the improvements together.','Sum up the three improvements in one closing sentence']],

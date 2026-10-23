@@ -1,24 +1,24 @@
 
 const PG = {
-  ko:{ bn:'AI 채점이 끝났어요. 교수님도 AI 점수를 가린 채 따로 채점해 두면, 다 끝난 뒤 두 점수를 맞대 기준을 고쳐요.', bnGo:'교수님 채점 시작', skip:'교차 검토 없이 확인하기',
+  ko:{ bn:'AI 채점이 끝났어요. 교수님도 AI 점수를 가리고 따로 매겨 두면, 두 점수가 갈린 곳에서 기준을 다듬어 남은 채점이 교수님 판단과 같아져요.', bnGo:'교수님 채점 시작', skip:'교차 검토 없이 확인하기',
     bnRun:(a,b)=>`교수님 채점 ${a} / ${b}명. 매긴 학생까지 AI 점수와 맞대 볼 수 있어요.`, bnRunGo:'이어서 채점', bnCross:'지금까지로 교차 검토',
-    h:'교수님 채점', sub:'AI 점수와 근거는 가려 두고 매겨요. 교수님 점수가 정답이 되고, 다 매기면 AI 점수와 맞대 기준을 고쳐요.',
+    h:'교수님 채점', sub:'AI 점수를 보지 않고 매겨야 교수님의 판단이 그대로 남아, AI 기준을 맞출 잣대가 돼요. AI 점수는 필요할 때 「AI 점수 보기」로 열 수 있어요.',
     tabOne:'한 명씩 매기기', tabSheet:'평가표로 올리기',
     hidden:'AI 점수 가림', showAi:'AI 점수 보기', hideAi:'다시 가리기', aiWas:n=>`AI ${n}점`,
     ansT:'답안', scoreT:'교수님 점수', memo:'메모 (선택)', memoPh:'학생에게 줄 말이나 채점하며 떠오른 기준', total:'합계',
     prev:'이전 학생', saveNext:'저장하고 다음', done:(a,b)=>`${a} / ${b}명 매김`, finish:'다 매겼어요 · 교차 검토로', finishSome:n=>`매긴 ${n}명으로 교차 검토`,
     fillRest:'나머지 채워 두기', saved:nm=>`${nm} 점수를 저장했어요`,
-    shT:'교수님 평가표 올리기', shD:'따로 만들어 둔 엑셀 평가표가 있으면 그대로 올려요. 학번으로 학생을 찾아 문항별 점수를 넣어요.', tpl:'평가표 양식 내려받기', drop:'평가표 파일을 끌어다 놓거나 눌러서 고르기', dropD:'엑셀(xlsx · csv) · 학번 · 이름 · 문항 1 · 문항 2 … 칸',
+    shT:'교수님 평가표 올리기', shD:'엑셀로 채점해 두셨다면 다시 입력하지 않고 그대로 올리면 돼요. 학번으로 학생을 찾아 문항별 점수를 넣어요.', tpl:'평가표 양식 내려받기', drop:'평가표 파일을 끌어다 놓거나 눌러서 고르기', dropD:'엑셀(xlsx · csv) · 학번 · 이름 · 문항 1 · 문항 2 … 칸',
     shDone:(n,m)=>`${n}명 점수를 넣었어요${m ? ` · 학번을 못 찾은 줄 ${m}개` : ''}`, shGo:'교차 검토로', tplDone:'평가표 양식을 내려받았어요', back:'평가로 돌아가기', q:n=>`문항 ${n}` },
-  en:{ bn:'AI scoring is done. Score separately with AI scores hidden; afterwards compare the two and fix the criteria.', bnGo:'Start my scoring', skip:'Review without cross-check',
+  en:{ bn:'AI scoring is done. Score separately with AI hidden, and where the two differ you can refine the criteria so the rest matches your judgment.', bnGo:'Start my scoring', skip:'Review without cross-check',
     bnRun:(a,b)=>`Your scoring ${a} / ${b}. You can compare up to the students scored.`, bnRunGo:'Continue', bnCross:'Cross-check so far',
-    h:'My scoring', sub:'AI scores and reasons stay hidden. Your scores are the answer; when done, compare with AI and fix the criteria.',
+    h:'My scoring', sub:'Scoring without seeing AI keeps your judgment intact, so it becomes the yardstick for the AI criteria. Open AI scores any time with "Show AI score".',
     tabOne:'One by one', tabSheet:'Upload my gradesheet',
     hidden:'AI score hidden', showAi:'Show AI score', hideAi:'Hide again', aiWas:n=>`AI ${n}`,
     ansT:'Answer', scoreT:'My score', memo:'Note (optional)', memoPh:'For the student, or a criterion that came to mind', total:'Total',
     prev:'Previous', saveNext:'Save and next', done:(a,b)=>`${a} / ${b} scored`, finish:'Done · go to cross-check', finishSome:n=>`Cross-check with ${n} scored`,
     fillRest:'Fill the rest', saved:nm=>`Saved ${nm}`,
-    shT:'Upload my gradesheet', shD:'If you keep your own spreadsheet, upload it as is. Students are matched by ID and scores filled per question.', tpl:'Download template', drop:'Drag a file here or click to choose', dropD:'xlsx · csv · columns: ID · name · Q1 · Q2 …',
+    shT:'Upload my gradesheet', shD:'If you already scored in a spreadsheet, upload it instead of typing again. Students are matched by ID and scores filled per question.', tpl:'Download template', drop:'Drag a file here or click to choose', dropD:'xlsx · csv · columns: ID · name · Q1 · Q2 …',
     shDone:(n,m)=>`Filled scores for ${n}${m ? ` · ${m} rows without a matching ID` : ''}`, shGo:'Go to cross-check', tplDone:'Template downloaded', back:'Back to evaluation', q:n=>`Q${n}` }
 };
 const pg = k => PG[lang][k];

@@ -1,7 +1,7 @@
 
 const CR = {
   ko:{
-    xH:'교차 검토 · 기준 고치기', xSub:'교수님 점수가 정답이에요. AI 점수와 갈린 곳에서 채점 기준 문장에 빠진 선을 찾았어요. AI에 점수를 맞추지 않고, 기준을 고쳐 같은 기준으로 다시 채점해요.',
+    xH:'교차 검토 · 기준 고치기', xSub:'교수님이 점수를 준 이유를 기준 문장에 담으면, 다시 채점할 때 AI도 같은 이유로 점수를 줘요. 고친 기준은 학생 피드백의 근거가 되고, 원래 점수는 그대로 남아요.',
     agreeT:'두 점수가 같은 학생', fixT:'기준 고치기 제안', fixD:'AI는 기준 문장에 적힌 것만 적힌 대로 읽어요. 아래 문장을 고치면 교수님 점수와 같은 이유로 점수가 나와요.',
     diff:(n,a,b)=>`교수님 ${a}점 · AI ${b}점으로 갈린 학생 ${n}명`, now:'지금 기준', next:'고친 기준', why:'왜 이렇게', apply:'기준 고치기', keep:'그대로 두기', applied:'고쳤어요', kept:'그대로 둠',
     rerunAsk:n=>`고친 기준 ${n}개로 다시 채점할까요? 고친 문항만 다시 채점해요.`, rerun:'고친 기준으로 다시 채점', rerunning:'고친 기준으로 다시 채점하고 있어요',
@@ -10,13 +10,13 @@ const CR = {
     logT:'바꾼 것', logEmpty:'아직 바꾼 것이 없어요.', logCrit:(q,it)=>`문항 ${q} · ${it} 기준 고침`, logScore:(q,nm,a,b)=>`문항 ${q} · ${nm} ${a}점 → ${b}점`,
     leftFix:n=>`확인할 제안 ${n}개가 남았어요`, needRerun:'고친 기준으로 다시 채점해 주세요', leftExc:n=>`확인할 답 ${n}개가 남았어요`, allSet:'모두 확인했어요', toConfirm:'확정하러 가기',
     principle:{where:'볼 곳 알려 주기', define:'용어 정의 · 인정할 표현', count:'개수 + 조건', top:'만점 높이'},
-    stdD:'시범 채점 판정과 교차 검토로 고친 문장이 들어간 문항별 채점 기준이에요. 학생 피드백은 이 기준을 근거로 써요. 해설 개정본으로 내려받아 학생 질문에 답할 때도 써요.',
+    stdD:'학생이 점수를 물어 올 때 이 기준 하나로 답할 수 있어요. 시범 채점과 교차 검토에서 고친 문장이 모두 들어 있고, 학생 피드백도 이 기준을 근거로 써요. 해설 개정본으로 내려받을 수 있어요.',
     edited:'고침', fromPilot:'시범 채점', fromCross:'교차 검토', fbBasis:n=>`피드백 근거: 채점 확정 기준(기준 고침 ${n}건 반영)`, seeStd:'기준 보기',
     rlInto:'들어갈 기준', rlPreview:(it)=>`문항 기준 「${it}」 문장에 더해요`,
     q:n=>`문항 ${n}`
   },
   en:{
-    xH:'Cross-check · fix criteria', xSub:'Your scores are the answer. Where AI differs, we found lines missing from the criteria. Rather than adjusting to AI, fix the criteria and rescore with them.',
+    xH:'Cross-check · fix criteria', xSub:'Put the reasons behind your scores into the criteria, and AI scores for the same reasons when it rescores. Fixed criteria back student feedback, and original scores are kept.',
     agreeT:'Students with matching scores', fixT:'Suggested criteria fixes', fixD:'AI reads only what the criteria say, as written. Fixing these makes scores come out for your reasons.',
     diff:(n,a,b)=>`${n} students: you ${a} · AI ${b}`, now:'Current', next:'Fixed', why:'Why', apply:'Fix criterion', keep:'Keep', applied:'Fixed', kept:'Kept',
     rerunAsk:n=>`Rescore with ${n} fixed criteria? Only the fixed questions are rescored.`, rerun:'Rescore with fixed criteria', rerunning:'Rescoring with fixed criteria',
@@ -25,7 +25,7 @@ const CR = {
     logT:'Changes', logEmpty:'Nothing changed yet.', logCrit:(q,it)=>`Q${q} · fixed "${it}"`, logScore:(q,nm,a,b)=>`Q${q} · ${nm} ${a} → ${b}`,
     leftFix:n=>`${n} suggestions left`, needRerun:'Rescore with the fixed criteria', leftExc:n=>`${n} answers left`, allSet:'All checked', toConfirm:'Go to confirm',
     principle:{where:'Say where to look', define:'Define terms · accepted wording', count:'Count + condition', top:'Full-mark bar'},
-    stdD:'Criteria per question, including lines added from the pilot and the cross-check. Student feedback is based on these. Download as a revised key for student questions.',
+    stdD:'When students ask about a score, this one standard answers it. It includes every line fixed in the pilot and cross-check, and feedback is based on it. Download it as a revised key.',
     edited:'Fixed', fromPilot:'Pilot', fromCross:'Cross-check', fbBasis:n=>`Feedback basis: final criteria (${n} fixes)`, seeStd:'View criteria',
     rlInto:'Goes into', rlPreview:(it)=>`Added to the criterion "${it}"`,
     q:n=>`Q${n}`
@@ -106,9 +106,9 @@ renderCross = function(){
     <div class="stats">${after.map((a,k)=>`<div class="stat${e.rescored && a!==base[k]?' hi':''}"><small>${cr('q')(k+1)} · ${cr('agreeT')}</small><b>${e.rescored && a!==base[k] ? `<em style="margin:0 6px 0 0;text-decoration:line-through">${base[k]}</em>` : ''}${a}<em>/ ${m}</em></b></div>`).join('')}</div>${m<n ? `<p class="sec-desc" style="margin:-6px 0 16px">${lang==='ko' ? `교수님이 매긴 ${m}명으로 맞대 봤어요. 나머지 ${n-m}명은 AI 점수 그대로예요.` : `Compared on the ${m} you scored. The other ${n-m} keep AI scores.`}</p>` : ''}
     ${rerunBand}
     <div class="two rl-two">
-      <div><p class="sem-title" style="margin:0 0 4px">${cr('fixT')}</p>${e.xfix.map(card).join('')}
+      <div><p class="sem-title" style="margin:0 0 12px">${cr('fixT')}</p>${e.xfix.map(card).join('')}
         ${e.rescored ? `<p class="sem-title" style="margin:24px 0 4px">${cr('excT')}</p><p class="sec-desc">${cr('excD')}</p>${e.xexc.map(exc).join('')}` : ''}</div>
-      <div class="rl-side"><p class="sem-title" style="margin:0 0 4px">${cr('logT')} <span class="st muted" style="font-weight:400">${e.xlog.length}</span></p><div class="box">
+      <div class="rl-side"><p class="sem-title" style="margin:0 0 12px">${cr('logT')} <span class="st muted" style="font-weight:400">${e.xlog.length}</span></p><div class="box">
         ${e.xlog.length ? `<ol class="rl-rules">${e.xlog.map(r=>`<li>${r}</li>`).join('')}</ol>` : `<p class="box-d" style="margin:0">${cr('logEmpty')}</p>`}</div></div>
     </div>
     <div class="fl-act"><span class="${ready?'fl-allset':'fl-left'}">${left}</span>
@@ -126,7 +126,7 @@ function crExc(k, how){ const e = evById(rosterId, evalId), x = e.xexc[k], stu =
 const _fbCR = flowBanner;
 flowBanner = function(c, e){
   if (e.flow==='cross'){ const open = e.xfix ? e.xfix.filter(x=>!x.done).length : XFIX.length;
-    return `<div class="fl-band"><span class="fl-band-ic"><i data-lucide="git-compare-arrows"></i></span><p>${lang==='ko'?`AI 점수와 교수님 점수를 맞대 봤어요. 기준 문장에 빠진 선 ${open}곳을 찾았어요. 기준을 고쳐 다시 채점해요.`:`Compared AI and your scores. Found ${open} lines missing from the criteria. Fix them and rescore.`}</p><span class="fl-band-b"><button class="act pri" onclick="go('cross','${c.id}',${e.id})">${cr('xH')}</button></span></div>`; }
+    return `<div class="fl-band"><span class="fl-band-ic"><i data-lucide="git-compare-arrows"></i></span><p>${lang==='ko'?`교수님 점수와 AI 점수가 갈린 곳에서 기준 문장 ${open}곳을 고치면 AI가 교수님과 같은 이유로 채점해요. 고칠 문장을 골라 두었어요.`:`Fixing ${open} criteria lines where your scores and AI differ makes AI score for your reasons. The lines are ready to review.`}</p><span class="fl-band-b"><button class="act pri" onclick="go('cross','${c.id}',${e.id})">${cr('xH')}</button></span></div>`; }
   return _fbCR(c, e);
 };
 

@@ -2,7 +2,7 @@
 const SM = {
   ko:{
     cH:'강좌', cSub:'수강 중인 강좌와 지난 학기 강좌예요.', thC:'강좌', thP:'담당', thS:'분반', thT:'학기', thN:'지금 할 일', open:'열기', join:'강좌 참여하기',
-    fH:'피드백', fSub:'공개된 점수와 피드백을 모아 봐요.', thE:'평가', thScore:'점수', thAt:'공개', fNone:'아직 공개된 피드백이 없어요',
+    fH:'피드백', fSub:'지난 피드백을 모아 보면 내가 자주 놓치는 점을 찾을 수 있어요. 교수님이 공개한 것만 보여요.', thE:'평가', thScore:'점수', thAt:'공개', fNone:'아직 공개된 피드백이 없어요',
     meH:'내 정보', meName:'이름', meSid:'학번', meDept:'학과', meMail:'학교 이메일', mePw:'비밀번호', mePwBtn:'비밀번호 바꾸기', meLang:'언어',
     meConsent:'개인정보 이용 동의', meConsentD:'2026.10.19 동의함 · 개인정보 수집·이용, AI 채점·피드백 이용 안내', meView:'내용 보기',
     meNote:'이름·학번·학과가 다르면 담당 교수님께 알려 주세요. 학생이 직접 고칠 수는 없어요.',
@@ -16,7 +16,7 @@ const SM = {
   },
   en:{
     cH:'Courses', cSub:'Current and past-term courses.', thC:'Course', thP:'Instructor', thS:'Section', thT:'Term', thN:'To do now', open:'Open', join:'Join a course',
-    fH:'Feedback', fSub:'All released scores and feedback in one place.', thE:'Assessment', thScore:'Score', thAt:'Released', fNone:'No feedback released yet',
+    fH:'Feedback', fSub:'Looking back over past feedback shows what you tend to miss. Only feedback your instructor released is shown.', thE:'Assessment', thScore:'Score', thAt:'Released', fNone:'No feedback released yet',
     meH:'My profile', meName:'Name', meSid:'Student ID', meDept:'Department', meMail:'School email', mePw:'Password', mePwBtn:'Change password', meLang:'Language',
     meConsent:'Privacy consent', meConsentD:'Agreed on 2026-10-19 · personal data use, AI scoring and feedback notice', meView:'View',
     meNote:'If your name, ID or department is wrong, tell your instructor. Students cannot edit them.',
