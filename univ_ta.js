@@ -1,10 +1,10 @@
 
 const TAD = {
-  ko:{ h:'조교', d:'조교는 이 강좌에서 답안 올리기 · AI 채점 · 확인(점수와 피드백 고치기)을 할 수 있어요. 평가 만들기·수정, 수강생 관리, 강좌 설정은 교수만 해요.',
+  ko:{ h:'조교', d:'조교는 이 강좌에서 답안 올리기 · AI 채점 · 확인(점수와 피드백 고치기)을 할 수 있어요. 평가 만들기·수정, 수강생 관리, 강좌 설정은 교수님만 할 수 있어요.',
     thN:'이름', thM:'학교 이메일', thS:'상태', in:'로그인함', inv:'초대 메일 보냄', rm:'제외', add:'추가', ph:'조교의 학교 이메일',
     added:'초대 메일을 보냈어요. 조교는 이 이메일로 처음 로그인해요.', removed:n=>`${n} 조교를 제외했어요`, bad:'학교 이메일을 넣어 주세요.',
-    rel:'조교도 피드백을 공개할 수 있어요', relD:'끄면 공개는 교수만 해요. 조교가 확인을 마치면 교수가 「공개하기」를 눌러요.', preview:'조교 화면으로 보기',
-    none:'아직 조교가 없어요.', role:'조교', taOnly:'이 강좌의 조교로 들어왔어요. 평가 만들기·수정과 수강생 관리는 교수만 할 수 있어요.' },
+    rel:'조교도 피드백을 공개할 수 있어요', relD:'끄면 공개는 교수님만 할 수 있어요. 조교가 확인을 마치면 교수님이 「공개하기」를 눌러요.', preview:'조교 화면으로 보기',
+    none:'아직 조교가 없어요.', role:'조교', taOnly:'이 강좌의 조교로 들어왔어요. 평가 만들기·수정과 수강생 관리는 교수님만 할 수 있어요.' },
   en:{ h:'Teaching assistants', d:'TAs can upload answers, run AI scoring and review (edit scores and feedback) in this course. Creating or editing assessments, managing students and course settings are instructor-only.',
     thN:'Name', thM:'School email', thS:'Status', in:'Signed in', inv:'Invite sent', rm:'Remove', add:'Add', ph:"TA's school email",
     added:'Invitation sent. The TA signs in with this email the first time.', removed:n=>`Removed ${n}`, bad:'Enter a school email.',
@@ -40,6 +40,7 @@ renderSettings = function(){ const h = _rsTA(), c = cById(rosterId), key = `<div
 
 
 if (IS_TA){
+  document.title = 'CLIPO University · 조교';   
   if (TA_REL.c1) document.documentElement.classList.add('ta-rel');
   const _rTA = render;
   render = function(){ _rTA();

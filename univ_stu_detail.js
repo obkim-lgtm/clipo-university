@@ -6,7 +6,7 @@ const D = {
     submit:'제출하기', resubmit:'다시 제출', viewFb:'피드백 보기', viewSub:'제출한 파일',
     prof:'담당', noEval:'아직 열린 평가가 없어요',
     
-    subH:'과제 제출', guideT:'과제 안내', dueT:'마감', fileT:'제출 파일', fileD:'PDF 1개를 올려요. 사진이나 워드 파일은 PDF로 바꿔서 올리면 AI가 더 정확하게 읽어요.',
+    subH:'과제 제출', guideT:'과제 안내', dueT:'마감', fileT:'제출 파일', fileD:'PDF 1개를 올려요. 사진이나 워드 파일은 PDF로 바꿔서 올리면 글자가 더 정확하게 읽혀요.',
     drop:'PDF 올리기', dropD:'또는 여기로 끌어다 놓기', qSheet:'문제지 내려받기', materials:'참고 자료',
     guideBody:'3주차와 5주차 자료를 바탕으로, 제시된 수행평가 설계의 타당성을 평가하고 개선안을 제시하세요. 분량은 A4 1~2쪽이에요.',
     doneT:'제출했어요', doneD:at=>`${at} 제출 · 마감 전까지 다시 올리면 마지막 파일로 바뀌어요`, changeFile:'파일 바꾸기',
@@ -21,7 +21,7 @@ const D = {
     st:{todo:'Not submitted', sub:'Submitted · not released yet', fb:'Feedback ready', soon:'Not released yet', exam:'Your instructor uploads answer sheets', closed:'Past due · not submitted'}, view:'View', closedT:'Submissions are closed', closedD:due=>`The due date was ${due} 23:59. If you still need to submit, contact your instructor; they can upload it for you.`, dlDone:f=>`Downloaded ${f}`, hideAns:'Hide my answer', vOrig:'Original', vText:'Recognized text',
     submit:'Submit', resubmit:'Resubmit', viewFb:'View feedback', viewSub:'Submitted file',
     prof:'Instructor', noEval:'No assessments yet',
-    subH:'Submit assignment', guideT:'Instructions', dueT:'Due', fileT:'Your file', fileD:'Upload one PDF. Convert photos or Word files to PDF so the AI reads them accurately.',
+    subH:'Submit assignment', guideT:'Instructions', dueT:'Due', fileT:'Your file', fileD:'Upload one PDF. Convert photos or Word files to PDF so the text is read accurately.',
     drop:'Upload PDF', dropD:'or drag it here', qSheet:'Download question sheet', materials:'Materials',
     guideBody:'Based on the week 3 and week 5 materials, evaluate the validity of the given assessment design and propose improvements. 1–2 A4 pages.',
     doneT:'Submitted', doneD:at=>`Submitted ${at} · upload again before the due date to replace it`, changeFile:'Change file',
